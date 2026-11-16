@@ -617,22 +617,36 @@
       <!-- ===================================================== -->
       <div id="behaviorControlsContainer" class="hidden space-y-5">
 
-        <!-- [행특 페이지 1] 기재요령 옵션 및 초등 핵심역량 선택 -->
+        <!-- [행특 페이지 1] 학년 선택 · 기재요령 옵션 및 초등 핵심역량 선택 -->
         <div id="behPage1" class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-7 shadow-xs space-y-6">
           <div class="flex flex-wrap items-center justify-between gap-2 pb-4 border-b border-slate-100">
             <div class="flex items-center gap-2.5">
               <span class="px-3 py-1 rounded-lg bg-emerald-600 text-white text-xs font-extrabold">페이지 1 / 5</span>
-              <h3 class="text-base sm:text-lg font-extrabold text-slate-900">기재요령 옵션 및 초등 핵심역량 선택</h3>
+              <h3 class="text-base sm:text-lg font-extrabold text-slate-900">학년 선택 · 기재요령 옵션 및 초등 핵심역량</h3>
             </div>
-            <span class="text-xs font-extrabold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-xl border border-emerald-200">
-              초등 교육과정 전용
+            <span id="behaviorSelectedSummaryBadge" class="text-xs font-extrabold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-xl border border-emerald-200">
+              6학년 · 연간 종합
             </span>
           </div>
 
-          <!-- 학기 표기 방식 (4열 균등 그리드, 높이 h-12 통일) -->
+          <!-- 1단계: 학년 선택 (1 ~ 6학년 6열 균등 그리드, 높이 h-12 통일) -->
+          <div class="space-y-2.5">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <label class="block text-xs font-extrabold text-slate-700">
+                1단계. 학년 선택 (1학년 ~ 6학년 발달 단계 및 학년별 중점 창체·진로연계 활동 자동 반영)
+              </label>
+              <button id="btnRecommendGradeBehaviorActs" type="button" class="text-xs font-extrabold text-emerald-700 hover:underline">
+                ✨ 선택한 학년 맞춤 활동 자동 추천 적용
+              </button>
+            </div>
+            <div id="behaviorGradeButtonGroup" class="grid grid-cols-3 sm:grid-cols-6 gap-2.5"></div>
+            <div id="behaviorGradeGuideBanner" class="p-3 rounded-xl bg-emerald-50/70 border border-emerald-200 text-xs text-emerald-950 font-semibold leading-relaxed"></div>
+          </div>
+
+          <!-- 2단계: 학기 표기 방식 (4열 균등 그리드, 높이 h-12 통일) -->
           <div class="space-y-2.5">
             <label class="block text-xs font-extrabold text-slate-700">
-              1단계. 학기 표기 방식 선택 (2026 기재요령 p.102 반영)
+              2단계. 학기 표기 방식 선택 (2026 기재요령 p.102 반영)
             </label>
             <div id="semesterPrefixGroup" class="grid grid-cols-2 sm:grid-cols-4 gap-3">
               <button type="button" data-sem="none" class="sem-btn h-12 px-3 rounded-xl border text-xs font-extrabold bg-emerald-600 text-white border-emerald-600 flex items-center justify-center">
@@ -653,7 +667,7 @@
           <!-- 초등 핵심역량 12종 (3열x4행 균등 그리드, 높이 h-11 통일) -->
           <div class="space-y-2.5">
             <label class="block text-xs font-extrabold text-slate-700">
-              2단계. 초등학교 핵심역량 및 인간상 선택 (클릭 시 도입부 문장에 반영 · 3열 균등 정렬)
+              3단계. 초등학교 핵심역량 및 인간상 선택 (클릭 시 도입부 문장에 반영 · 3열 균등 정렬)
             </label>
             <div id="coreCompetencyChipGroup" class="grid grid-cols-1 sm:grid-cols-3 gap-2.5"></div>
           </div>
@@ -1067,6 +1081,10 @@
                           </label>
                           <input id="planMaterialDesc" type="text" class="flex-1 min-w-[240px] px-2 py-1 rounded border border-slate-300 text-xs" value="차시별 자체 개발 학습지 및 생성형 AI 글쓰기 코스웨어(자작자작 등) 활용" />
                         </div>
+                        <div class="pt-1 flex flex-wrap items-center gap-1.5">
+                          <span class="text-[11px] font-extrabold text-purple-800">📚 활동 맞춤 추천 교수학습자료 (누르면 적용):</span>
+                          <div id="planMaterialRecChips" class="flex flex-wrap items-center gap-1"></div>
+                        </div>
                       </td>
                     </tr>
                     <tr>
@@ -1116,15 +1134,27 @@
                 <span>활동의 설계 (내용체계표 · 성취기준 · 32차시 학습 활동 개관 · 평가 계획)</span>
               </h3>
 
-              <!-- 1. 활동명 & 2. 필요성 및 목표 -->
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/60 space-y-2">
-                  <label class="block text-xs font-extrabold text-slate-800">2-가. 활동 개설의 필요성 (줄바꿈으로 1), 2), 3) 구분)</label>
-                  <textarea id="planNecessityList" rows="4" class="w-full p-2.5 rounded-lg border border-slate-300 bg-white text-xs leading-relaxed"></textarea>
+              <!-- 1. 활동명 & 2. 필요성 및 목표 (추천 문장 선택기 포함) -->
+              <div class="space-y-3">
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                  <h4 class="text-xs sm:text-sm font-extrabold text-slate-800">1~2. 활동 개설의 필요성 및 활동 목표 (설계 의도 맞춤 추천 문장 연동)</h4>
+                  <span class="text-[11px] font-semibold text-purple-700">추천 문장을 누르면 필요성·목표 칸에 즉시 추가·해제됩니다</span>
                 </div>
-                <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/60 space-y-2">
-                  <label class="block text-xs font-extrabold text-slate-800">2-나. 활동 목표 (줄바꿈으로 1), 2), 3) 구분)</label>
-                  <textarea id="planGoalList" rows="4" class="w-full p-2.5 rounded-lg border border-slate-300 bg-white text-xs leading-relaxed"></textarea>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/60 space-y-2">
+                    <div class="flex items-center justify-between">
+                      <label class="block text-xs font-extrabold text-slate-800">2-가. 활동 개설의 필요성 (줄바꿈으로 1), 2), 3) 구분)</label>
+                    </div>
+                    <div id="planNecessityRecList" class="max-h-32 overflow-y-auto custom-scroll bg-white rounded-lg border border-slate-200 p-1.5 space-y-1"></div>
+                    <textarea id="planNecessityList" rows="4" class="w-full p-2.5 rounded-lg border border-slate-300 bg-white text-xs leading-relaxed"></textarea>
+                  </div>
+                  <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/60 space-y-2">
+                    <div class="flex items-center justify-between">
+                      <label class="block text-xs font-extrabold text-slate-800">2-나. 활동 목표 (줄바꿈으로 1), 2), 3) 구분)</label>
+                    </div>
+                    <div id="planGoalRecList" class="max-h-32 overflow-y-auto custom-scroll bg-white rounded-lg border border-slate-200 p-1.5 space-y-1"></div>
+                    <textarea id="planGoalList" rows="4" class="w-full p-2.5 rounded-lg border border-slate-300 bg-white text-xs leading-relaxed"></textarea>
+                  </div>
                 </div>
               </div>
 
@@ -1288,12 +1318,38 @@
               </div>
 
               <!-- 4-나. 평가 계획 -->
-              <div class="space-y-2">
+              <div class="space-y-2.5">
                 <div class="flex flex-wrap items-center justify-between gap-2">
                   <h4 class="text-xs sm:text-sm font-extrabold text-slate-800">4-나. 평가 계획 (성취수준: 매우잘함[탁월] / 잘함[숙달] / 보통[기본] / 노력요함)</h4>
-                  <button id="btnAddPlanEvalRow" type="button" class="h-8 px-3 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-extrabold transition">
-                    + 평가 계획 행 추가
-                  </button>
+                  <div class="flex flex-wrap items-center gap-1.5">
+                    <button id="btnAutoGeneratePlanEvals" type="button" class="h-8 px-3 rounded-lg bg-purple-600 hover:bg-purple-700 text-white text-xs font-extrabold transition">
+                      🔄 설계·성취기준에 맞춰 평가 계획 자동 갱신
+                    </button>
+                    <button id="btnAddPlanEvalRow" type="button" class="h-8 px-3 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-extrabold transition">
+                      + 평가 계획 행 추가
+                    </button>
+                  </div>
+                </div>
+
+                <!-- 교육과정 제시 평가 영역 & 평가 방법 스크롤 선택 박스 -->
+                <div class="rounded-xl border border-slate-200 bg-slate-50 p-3.5 space-y-2.5">
+                  <div class="flex flex-wrap items-center justify-between gap-2">
+                    <span class="text-xs font-extrabold text-slate-800">🎯 교육과정 제시 [평가 영역] 및 [평가 방법] 선택 (적용할 평가 행을 고른 뒤 항목을 누르세요)</span>
+                    <div class="flex items-center gap-1.5">
+                      <span class="text-[11px] font-bold text-slate-600">적용 대상 행:</span>
+                      <select id="planEvalTargetRowSelect" class="h-7 px-2 rounded border border-slate-300 bg-white text-xs font-extrabold text-purple-900"></select>
+                    </div>
+                  </div>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div class="space-y-1">
+                      <label class="block text-[11px] font-extrabold text-slate-700">1) 교육과정 교과별 평가 영역 (스크롤 목록)</label>
+                      <div id="planEvalDomainScrollBox" class="max-h-32 overflow-y-auto custom-scroll bg-white rounded-lg border border-slate-200 p-1.5 space-y-1"></div>
+                    </div>
+                    <div class="space-y-1">
+                      <label class="block text-[11px] font-extrabold text-slate-700">2) 교육과정 제시 평가 방법·유형 (스크롤 목록 · 복수 조합 가능)</label>
+                      <div id="planEvalMethodScrollBox" class="max-h-32 overflow-y-auto custom-scroll bg-white rounded-lg border border-slate-200 p-1.5 grid grid-cols-1 sm:grid-cols-2 gap-1"></div>
+                    </div>
+                  </div>
                 </div>
                 <div class="overflow-x-auto">
                   <table class="hwp-table">
@@ -1604,12 +1660,38 @@
               </div>
 
               <!-- 4-나. 평가 계획 -->
-              <div class="space-y-2">
+              <div class="space-y-2.5">
                 <div class="flex flex-wrap items-center justify-between gap-2">
                   <h4 class="text-xs sm:text-sm font-extrabold text-slate-800">4-나. 평가 계획</h4>
-                  <button id="btnAddRepEvalRow" type="button" class="h-8 px-3 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-extrabold transition">
-                    + 평가 계획 행 추가
-                  </button>
+                  <div class="flex flex-wrap items-center gap-1.5">
+                    <button id="btnAutoGenerateRepEvals" type="button" class="h-8 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold transition">
+                      🔄 설계·성취기준에 맞춰 평가 계획 자동 갱신
+                    </button>
+                    <button id="btnAddRepEvalRow" type="button" class="h-8 px-3 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-extrabold transition">
+                      + 평가 계획 행 추가
+                    </button>
+                  </div>
+                </div>
+
+                <!-- 보고서: 교육과정 제시 평가 영역 & 평가 방법 스크롤 선택 박스 -->
+                <div class="rounded-xl border border-slate-200 bg-slate-50 p-3.5 space-y-2.5">
+                  <div class="flex flex-wrap items-center justify-between gap-2">
+                    <span class="text-xs font-extrabold text-slate-800">🎯 교육과정 제시 [평가 영역] 및 [수업·평가 방법] 선택</span>
+                    <div class="flex items-center gap-1.5">
+                      <span class="text-[11px] font-bold text-slate-600">적용 대상 행:</span>
+                      <select id="repEvalTargetRowSelect" class="h-7 px-2 rounded border border-slate-300 bg-white text-xs font-extrabold text-emerald-900"></select>
+                    </div>
+                  </div>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div class="space-y-1">
+                      <label class="block text-[11px] font-extrabold text-slate-700">1) 교육과정 교과별 평가 영역 (스크롤 목록)</label>
+                      <div id="repEvalDomainScrollBox" class="max-h-32 overflow-y-auto custom-scroll bg-white rounded-lg border border-slate-200 p-1.5 space-y-1"></div>
+                    </div>
+                    <div class="space-y-1">
+                      <label class="block text-[11px] font-extrabold text-slate-700">2) 교육과정 제시 수업·평가 방법 (스크롤 목록)</label>
+                      <div id="repEvalMethodScrollBox" class="max-h-32 overflow-y-auto custom-scroll bg-white rounded-lg border border-slate-200 p-1.5 grid grid-cols-1 sm:grid-cols-2 gap-1"></div>
+                    </div>
+                  </div>
                 </div>
                 <div class="overflow-x-auto">
                   <table class="hwp-table">
@@ -11467,7 +11549,7 @@
     ];
 
     const BEHAVIOR_STEP_META = [
-      { step: 1, shortTitle: "페이지 1 · 기재요령·역량", fullTitle: "페이지 1. 기재요령 옵션 및 초등 핵심역량 선택" },
+      { step: 1, shortTitle: "페이지 1 · 학년·역량", fullTitle: "페이지 1. 학년 선택 · 기재요령 옵션 및 초등 핵심역량" },
       { step: 2, shortTitle: "페이지 2 · 활동 선택 탭", fullTitle: "페이지 2. 초등 학교교육과정 활동 선택 탭" },
       { step: 3, shortTitle: "페이지 3 · 발전가능성·개수", fullTitle: "페이지 3. 기재요령 발전가능성 선택 및 생성 개수" },
       { step: 4, shortTitle: "페이지 4 · 조합·수정박스", fullTitle: "페이지 4. 초등 행동특성 활동 조합·개별 수정 박스" },
@@ -11493,6 +11575,7 @@
       subjectRecords: [],
 
       // 탭 2: 행동특성 및 종합의견 상태
+      behaviorGrade: 6,
       behaviorSemesterMode: "none",
       selectedCompetencies: ["comp_self", "comp_community"],
       activeBehaviorCategory: "autonomy",
@@ -11550,7 +11633,7 @@
 
     function saveStateToCache() {
       try {
-        localStorage.setItem("elem_student_record_2026_v7", JSON.stringify(state));
+        localStorage.setItem("elem_student_record_2026_v9", JSON.stringify(state));
         const badge = document.getElementById("cacheStatusBadge");
         if (badge) {
           badge.textContent = "💾 자동저장됨";
@@ -11562,7 +11645,7 @@
 
     function loadStateFromCache() {
       try {
-        const raw = localStorage.getItem("elem_student_record_2026_v7");
+        const raw = localStorage.getItem("elem_student_record_2026_v9");
         if (raw) {
           const parsed = JSON.parse(raw);
           state = Object.assign({}, JSON.parse(JSON.stringify(DEFAULT_STATE)), parsed);
@@ -11971,6 +12054,81 @@
     // =========================================================================
     // 6. 탭 2: 행동특성 및 종합의견 다중 변주 문장 생성 엔진
     // =========================================================================
+    const BEHAVIOR_GRADE_META = {
+      1: {
+        title: "1학년 맞춤 중점: 입학 초기 적응활동(진로연계교육) · 기본생활습관 · 안전 · 어린이 놀이",
+        desc: "1학년은 『입학 초기 적응활동(진로연계교육)』, 바른 기본생활습관(인사·정리정돈·급식 질서), 학교안전 7대 영역, 친구들과 사이좋게 어울리는 놀이 활동이 중점 반영됩니다.",
+        recommendedIds: ["act_grade1_adapt", "act_basic_habit", "act_child_play", "act_safety_7", "act_char_listen"],
+        gradeIntroPool: [
+          "초등학교 1학년 학교생활에 밝고 활기차게 적응하며",
+          "입학 후 학교의 하루 일과와 규칙을 즐겁게 익히며",
+          "호기심 가득한 눈빛으로 1학년 배움과 놀이 활동에 참여하며"
+        ]
+      },
+      2: {
+        title: "2학년 맞춤 중점: 바른 학습태도 · 관계 소통 · 협동 놀이 · 생태·독서 습관",
+        desc: "2학년은 바른 경청·발표 태도, 교우 배려와 고운 말 사용, 사제동행 독서, 자연·마을 탐색 및 협동 놀이 활동이 중점 반영됩니다.",
+        recommendedIds: ["act_basic_habit", "act_relation_comm", "act_child_play", "act_character_reading", "act_char_empathy"],
+        gradeIntroPool: [
+          "2학년 학교생활 전반에 밝고 성실한 태도로 참여하며",
+          "바른 기본생활습관을 바탕으로 친구들과 다정하게 어울리며",
+          "수업과 창의적 체험활동에 즐겁고 적극적인 자세로 임하며"
+        ]
+      },
+      3: {
+        title: "3학년 맞춤 중점: 학급 다모임 · 1인 1역할 · 초등 생존수영 · 동아리 활동 시작",
+        desc: "3학년은 학급 다모임(자치회)과 1인 1역할 수행, 초등 생존수영 실기교육, 독서·문화예술·스포츠 동아리 및 사회정서(어울림) 활동이 중점 반영됩니다.",
+        recommendedIds: ["act_council", "act_class_role", "act_swim_paps", "act_club_reading", "act_sel_eroul"],
+        gradeIntroPool: [
+          "3학년 학급 자치와 다양한 창의적 체험활동에 능동적으로 참여하며",
+          "공동체 규칙을 준수하고 맡은 역할에 최선을 다하는 성실한 태도로",
+          "또래 친구들과 협력하며 새로운 교과와 체험 활동에 의욕적으로 도전하며"
+        ]
+      },
+      4: {
+        title: "4학년 맞춤 중점: 자치·다모임 · 생존수영·PAPS · 생태환경 · 디지털 시민성",
+        desc: "4학년은 학급 자치 다모임, 생존수영 및 건강체력(PAPS), 탄소 중립 생태 환경 실천, 디지털 리터러시 및 또래 공감 소통 활동이 중점 반영됩니다.",
+        recommendedIds: ["act_council", "act_swim_paps", "act_eco_play", "act_digital_citizen", "act_char_empathy"],
+        gradeIntroPool: [
+          "4학년 학급 공동체 활동에서 배려와 책임감을 실천하며",
+          "자기 주도적인 학습 태도와 바른 인성을 바탕으로 학교생활에 임하며",
+          "다양한 창의적 체험활동과 모둠 프로젝트에 성실하고 조화롭게 참여하며"
+        ]
+      },
+      5: {
+        title: "5학년 맞춤 중점: 학생 자치·봉사 · PAPS·스포츠클럽 · 민주시민 · 진로 자아탐색",
+        desc: "5학년은 고학년으로서 학급·전교 자치와 교내 봉사, 학교스포츠클럽 및 PAPS, 어린이 민주시민·인권 교육, 자신의 강점·적성을 찾는 진로 탐색이 중점 반영됩니다.",
+        recommendedIds: ["act_council", "act_democratic_media", "act_club_sports", "act_career_self", "act_school_violence_prev"],
+        gradeIntroPool: [
+          "고학년으로서 성숙한 책임감과 자율성을 발휘하여 학교생활에 모범이 되며",
+          "학급 자치와 동아리·봉사 활동에서 솔선수범하고 협력적 리더십을 보이며",
+          "나와 타인을 존중하는 민주적인 태도로 학교 교육 활동 전반에 주도적으로 참여하며"
+        ]
+      },
+      6: {
+        title: "6학년 맞춤 중점: 상급학교 진학 진로연계교육 · 자율·자치 리더십 · 진로 설계 · 봉사",
+        desc: "6학년은 『상급학교 진학 진로연계교육』, 최고학년으로서의 자치·봉사 리더십, 미래 직업 탐색 및 꿈 로드맵 설계, 디지털·미디어 시민 역량이 중점 반영됩니다.",
+        recommendedIds: ["act_grade6_transition", "act_council", "act_career_plan", "act_vol_school", "act_honest_promise"],
+        gradeIntroPool: [
+          "6학년 최고학년으로서 모범적인 생활 태도와 성숙한 공동체 의식을 발휘하며",
+          "자신의 진로를 주도적으로 탐색하고 학급과 학교를 위해 솔선수범하며",
+          "깊이 있는 사고력과 배려심을 바탕으로 초등학교 생활을 알차게 갈무리하며"
+        ]
+      }
+    };
+
+    function applyGradeRecommendedBehaviorActivities(grade, showToastMsg = true) {
+      const g = parseInt(grade, 10) || 6;
+      const meta = BEHAVIOR_GRADE_META[g] || BEHAVIOR_GRADE_META[6];
+      state.behaviorGrade = g;
+      state.selectedActivityIds = [...meta.recommendedIds];
+      generateBehaviorRecords();
+      renderAll();
+      if (showToastMsg) {
+        showToast(`${g}학년 발달 단계에 맞는 추천 행동특성 활동 ${meta.recommendedIds.length}개가 자동 적용되었습니다!`, "success");
+      }
+    }
+
     function getAllBehaviorActivityMap() {
       const map = {};
       Object.keys(BEHAVIOR_ACTIVITIES).forEach(cat => {
@@ -12045,7 +12203,7 @@
         newRecords.push({
           id: `beh_rec_${i + 1}`,
           index: i + 1,
-          label: `학생 ${i + 1} (초등 행동특성 및 종합의견)`,
+          label: `학생 ${i + 1} (${state.behaviorGrade || 6}학년 행동특성 및 종합의견)`,
           text: buildSingleBehaviorSentence(i, i * 2)
         });
       }
@@ -12249,7 +12407,7 @@
       } else {
         rightBadge.className = "px-2.5 py-1 rounded-lg text-xs font-extrabold bg-emerald-600 text-white";
         rightBadge.textContent = "행동특성 및 종합의견 편집기";
-        rightTitle.textContent = `초등 행동특성 및 종합의견 최종 수정 박스 (${state.behaviorRecords.length}명분)`;
+        rightTitle.textContent = `초등 ${state.behaviorGrade || 6}학년 행동특성 및 종합의견 최종 수정 박스 (${state.behaviorRecords.length}명분)`;
       }
     }
 
@@ -12478,6 +12636,53 @@
     // 9. 분기 2 (행동특성 및 종합의견) 컨트롤 렌더링
     // =========================================================================
     function renderBehaviorControls() {
+      const bGrade = state.behaviorGrade || 6;
+      const semLabels = { none: "연간 종합", sem1: "(1학기) 표기", sem2: "(2학기) 표기", both: "(1·2학기) 병기" };
+      const sumBadge = document.getElementById("behaviorSelectedSummaryBadge");
+      if (sumBadge) {
+        sumBadge.textContent = `${bGrade}학년 · ${semLabels[state.behaviorSemesterMode] || "연간 종합"}`;
+      }
+
+      // 1단계: 학년 선택 버튼 (1~6학년 6열 균등 그리드)
+      const bGradeGroup = document.getElementById("behaviorGradeButtonGroup");
+      if (bGradeGroup) {
+        bGradeGroup.innerHTML = "";
+        for (let g = 1; g <= 6; g++) {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          const isActive = bGrade === g;
+          btn.className = isActive
+            ? "h-12 rounded-xl text-xs font-extrabold bg-emerald-600 text-white border-2 border-emerald-600 shadow-xs flex items-center justify-center"
+            : "h-12 rounded-xl text-xs font-bold bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 flex items-center justify-center";
+          btn.textContent = `${g}학년`;
+          btn.addEventListener("click", () => {
+            state.behaviorGrade = g;
+            // 타 학년 전용 활동(초1 입학적응 vs 초6 상급학교 진학)이 선택되어 있으면 해당 학년 맞춤 활동으로 자동 교체
+            if (g !== 1 && state.selectedActivityIds.includes("act_grade1_adapt")) {
+              state.selectedActivityIds = state.selectedActivityIds.filter(x => x !== "act_grade1_adapt");
+              if (g === 6 && !state.selectedActivityIds.includes("act_grade6_transition")) {
+                state.selectedActivityIds.unshift("act_grade6_transition");
+              }
+            }
+            if (g !== 6 && state.selectedActivityIds.includes("act_grade6_transition")) {
+              state.selectedActivityIds = state.selectedActivityIds.filter(x => x !== "act_grade6_transition");
+              if (g === 1 && !state.selectedActivityIds.includes("act_grade1_adapt")) {
+                state.selectedActivityIds.unshift("act_grade1_adapt");
+              }
+            }
+            generateBehaviorRecords();
+            renderAll();
+          });
+          bGradeGroup.appendChild(btn);
+        }
+      }
+
+      const gBanner = document.getElementById("behaviorGradeGuideBanner");
+      if (gBanner) {
+        const gMeta = BEHAVIOR_GRADE_META[bGrade] || BEHAVIOR_GRADE_META[6];
+        gBanner.innerHTML = `<div class="font-extrabold text-emerald-900">📌 ${gMeta.title}</div><div class="text-[11px] text-emerald-800 mt-0.5">${gMeta.desc}</div>`;
+      }
+
       document.querySelectorAll(".sem-btn").forEach(btn => {
         const sem = btn.getAttribute("data-sem");
         if (sem === state.behaviorSemesterMode) {
@@ -12525,7 +12730,11 @@
       actList.innerHTML = "";
       const behSearchInput = document.getElementById("behaviorSearchInput");
       const behQuery = behSearchInput ? (behSearchInput.value || "").trim().toLowerCase() : "";
-      let currentActs = BEHAVIOR_ACTIVITIES[state.activeBehaviorCategory] || [];
+      let currentActs = (BEHAVIOR_ACTIVITIES[state.activeBehaviorCategory] || []).filter(item => {
+        if (item.id === "act_grade1_adapt" && (state.behaviorGrade || 6) !== 1) return false;
+        if (item.id === "act_grade6_transition" && (state.behaviorGrade || 6) !== 6) return false;
+        return true;
+      });
       if (behQuery) {
         currentActs = [];
         Object.keys(BEHAVIOR_ACTIVITIES).forEach(catKey => {
@@ -13176,73 +13385,442 @@
 
     
     // =========================================================================
-    // 11-C. 실시간 활동 개관 인식 · 내용체계표 추천 문장 · 성취기준 아카이브 · 활동 전개 계획 자동 생성 엔진
+    // 11-C. 실시간 활동 개관 인식 · 주제별 맞춤 교수학습자료 DB · 내용체계 · 성취기준 · 평가 계획 엔진
     // =========================================================================
-    const MATRIX_RECOMMENDATION_BANK = {
-      questions: [
-        "일상생활과 민주주의는 어떤 관련이 있으며, 시민은 어떻게 정치와 사회에 참여할 수 있을까?",
-        "AI 글쓰기 도구를 활용하여 내 의견을 효과적이고 윤리적으로 전달하는 방법은 무엇일까?",
-        "한 권의 책을 깊이 읽으며 인물의 선택과 성장 과정을 나의 삶과 어떻게 연결할 수 있을까?",
-        "자작자작 등 AI 피드백 도구를 활용하여 나의 생각과 감상을 어떻게 더 깊이 있는 글로 완성할 수 있을까?",
-        "우리 지역의 소중한 생태 환경과 국가유산을 지키고 알리기 위해 우리는 무엇을 할 수 있을까?",
-        "디지털 지도와 매체 자료를 활용하여 우리 마을의 매력을 효과적으로 소개하는 방법은 무엇일까?",
-        "기후변화와 생태계 위기에 대응하여 우리 학교와 마을에서 실천할 수 있는 지속가능한 삶의 방식은 무엇일까?",
-        "다양한 문화와 서로 다른 의견을 존중하며 평화로운 공동체를 만들려면 어떤 태도가 필요할까?",
-        "일상생활의 문제를 해결하기 위해 데이터와 인공지능·디지털 기술을 어떻게 창의적으로 활용할 수 있을까?",
-        "나의 흥미와 적성을 탐색하고 도덕적 가치를 고려하여 미래 진로를 설계하려면 무엇을 준비해야 할까?"
+    const AUTONOMOUS_THEME_DB = {
+      eco_climate: {
+        label: "생태·환경·기후변화 교육",
+        matchRegex: /생태|환경|기후|탄소|자연|동식물|식물|동물|숲|탄천|맹산|하천|갯벌|업사이클|재활용|쓰레기|분리배출|에너지|지속가능|생명|정원|텃밭/,
+        defaultBook: "우리 마을 자연 관찰 도감 및 환경 그림책",
+        materials: [
+          "차시별 생태 탐사 워크북, 스마트 자연 관찰 도감 앱(모야모·네이처링), 지역 생태 지도, 루페(돋보기)·관찰 기록장",
+          "환경부 초등 기후변화·탄소중립 교육 자료, 태블릿 디지털 생태 도감 제작 템플릿, 학급 생태 캠페인 보드",
+          "학교 숲·하천 동식물 생태 카드, 간이 수질·토양 관찰 키트, 재활용 업사이클링 메이커 활동 자료"
+        ],
+        necessities: [
+          "1) (지역과 학교의 여건) 학교 주변의 탄천·맹산·학교 숲 등 풍부한 지역 자연 생태 자원을 교과 학습과 직접 연계한 현장 체험형 생태·환경 교육이 요구됨.",
+          "2) (학생의 필요) 기후 위기와 생태계 변화가 일상생활에 미치는 영향을 스스로 탐구하고, 우리 주변의 동식물과 공생하기 위한 생태 보전 행동을 주도적으로 실천할 경험이 필요함.",
+          "3) (교육과정 연계) 과학과(생물과 환경·기후변화), 사회과(지역의 자연환경), 국어과(관찰 보고서 및 캠페인 발표)를 통합하여 삶과 연결된 생태 시민 프로젝트를 운영하고자 함.",
+          "4) (생태 감수성 함양) 교실 안의 지식 습득을 넘어 계절에 따른 자연의 변화를 오감으로 관찰하고 생명의 소중함을 체득하는 지속가능발전교육이 필요함."
+        ],
+        goals: [
+          "1) 학교 숲과 우리 지역에 서식하는 동식물을 관찰·분류하고, 생태계 구성 요소(생물·비생물 요소) 간의 상호작용과 먹이그물의 원리를 설명할 수 있다.",
+          "2) 인간 활동과 기후변화가 생태계 및 우리 생활에 미치는 영향을 조사하고, 모둠 토의를 통해 구체적인 생태 보전 방안을 탐구 보고서로 작성할 수 있다.",
+          "3) 스마트 자연 관찰 도감과 시각 매체를 활용해 '우리 마을 생태 안내도'와 탄소 중립 캠페인 자료를 제작·발표하며 일상 속 환경 보호를 꾸준히 실천한다.",
+          "4) 주변의 동식물과 자연환경을 소중한 생명으로 존중하는 생태 감수성과 지속가능한 삶의 태도를 기른다."
+        ],
+        questions: [
+          "우리 마을(탄천·맹산·학교 숲)에는 어떤 동식물이 더불어 살아가고 있으며, 생태계 평형을 지키기 위해 무엇이 필요할까?",
+          "기후변화와 인간 활동이 자연환경에 미치는 영향을 줄이고, 학교와 가정에서 탄소 중립을 실천하는 구체적인 방법은 무엇일까?",
+          "계절에 따라 우리 주변의 동식물은 어떻게 변하며, 인간과 자연이 건강하게 공생하려면 어떤 환경이 만들어져야 할까?",
+          "우리 지역의 생태 자원과 생물 다양성을 조사하여 마을 사람들에게 효과적으로 알리는 방법은 무엇일까?"
+        ],
+        knowledge: [
+          "생태계의 의미와 생물 요소(생산자·소비자·분해자) 및 비생물 환경 요소(햇빛·물·온도 등)의 상호작용",
+          "우리 지역의 자연환경 특성과 계절에 따른 주변 동식물의 생김새·한살이 및 서식 환경",
+          "기후변화 현상의 원인과 인간 활동이 생태계 평형 및 우리 생활에 미치는 영향",
+          "대상을 세밀하게 관찰하여 기록하는 과학 탐구 보고서와 생태 보호 캠페인 매체 자료의 특징",
+          "자원 순환(새활용·분리배출)과 재생 에너지 등 지속가능한 생태 환경을 위한 실천 방법"
+        ],
+        process: [
+          "루페(돋보기)와 스마트 자연 관찰 도감(모야모·네이처링)을 활용하여 학교 숲과 지역 하천의 동식물 관찰·기록하기",
+          "생물의 먹고 먹히는 관계(먹이사슬·먹이그물)를 도식화하고 생태계 평형의 중요성 탐구하기",
+          "기후변화와 환경 오염 사례를 조사하고 모둠 토의를 통해 학급·가정 탄소 중립 실천 수칙 수립하기",
+          "관찰하고 조사한 내용을 바탕으로 생태 탐구 보고서와 환경 보호 제안하는 글 작성하기",
+          "태블릿과 시각 디자인 도구를 활용하여 '우리 마을 생물 다양성 도감' 및 생태 보전 캠페인 자료를 제작·발표하기"
+        ],
+        values: [
+          "우리 주변의 작은 동식물과 자연을 소중한 생명으로 아끼고 존중하는 생태 감수성",
+          "인간과 자연이 더불어 살아가는 공생의 가치를 깊이 인식하고 생물 다양성을 보전하려는 태도",
+          "기후 위기와 환경 문제를 자신의 삶과 연결하여 자원 절약·분리배출 등 탄소 중립을 꾸준히 실천하려는 생태 시민 의식",
+          "지역 사회의 자연환경 변화에 관심을 갖고 친구들과 협력하여 생태 보호 캠페인에 능동적으로 참여하는 책임감"
+        ],
+        evalDomainDefault: "생명·자연환경과 인간 생활 (과정·기능 및 생태 시민 태도)",
+        evalMethodDefault: "관찰 평가 · 탐구 보고서 평가 · 프로젝트(캠페인 산출물) 평가"
+      },
+
+      local_heritage: {
+        label: "우리 지역·국가유산·마을 탐구",
+        matchRegex: /지역|마을|고장|국가유산|문화유산|역사|유적|유물|지도|성남|야탑|박물관|전통|안내도|탐방/,
+        defaultBook: "성남 우리 고장 역사·문화유산 이야기",
+        materials: [
+          "우리 지역(성남·야탑) 백지도 및 스마트 디지털 지도 앱, 국가유산청 문화유산 교육 자료, 현장 답사 워크북",
+          "태블릿 디지털 마을 안내도·홍보 리플릿 제작 템플릿, 우리 고장 역사 인물·국가유산 사진 자료집",
+          "지역 문제 해결 토의 활동지, 모둠별 마을 탐방 계획서 및 발표 보드"
+        ],
+        necessities: [
+          "1) (지역과 학교의 여건) 학생들이 매일 살아가는 우리 마을과 지역의 지리적 특성 및 국가유산 자원을 교과 수업과 연결한 삶 중심 지역화 교육이 필요함.",
+          "2) (학생의 필요) 우리 고장의 과거와 현재 모습을 스스로 조사하고, 지역의 가치를 알리거나 지역 문제를 해결하는 주체적인 시민 참여 경험이 요구됨.",
+          "3) (교육과정 연계) 사회과(지도로 만나는 우리 지역·국가유산·지역문제 해결)와 국어과(보고하는 글·매체 발표)를 통합하여 깊이 있는 프로젝트 학습을 구현하고자 함."
+        ],
+        goals: [
+          "1) 다양한 지도를 활용하여 우리 지역의 위치와 자연·인문 환경의 특성을 파악하고 주요 장소를 설명할 수 있다.",
+          "2) 우리 지역에 전해 내려오는 국가유산과 역사 인물을 조사하고, 국가유산에 담긴 가치와 보존 방법을 탐색할 수 있다.",
+          "3) 디지털 지도와 시각 매체 자료를 활용하여 '우리 마을 국가유산·명소 안내도'를 협동 제작하고 발표할 수 있다."
+        ],
+        questions: [
+          "우리 지역의 자연환경과 인문환경은 어떤 특징이 있으며, 사람들의 생활 모습에 어떤 영향을 주었을까?",
+          "우리 고장에 남아 있는 소중한 국가유산을 지키고 마을 사람들에게 널리 알리기 위해 우리는 무엇을 할 수 있을까?",
+          "디지털 지도와 매체 자료를 활용하여 우리 마을의 매력과 해결해야 할 지역 문제를 효과적으로 전달하는 방법은 무엇일까?"
+        ],
+        knowledge: [
+          "지도의 기본 요소(방위, 기호, 축척, 등고선)와 우리 지역의 위치 및 자연·인문 환경 특성",
+          "우리 지역에 전해 내려오는 유형·무형 국가유산의 종류와 역사적 가치",
+          "지역 사회의 변화 모습과 주민 자치를 통한 지역 문제의 합리적 해결 과정",
+          "관찰·조사한 내용을 정리하는 보고서와 대상에 맞는 마을 안내 매체 자료의 구성 방식"
+        ],
+        process: [
+          "스마트 지도와 백지도를 활용하여 우리 학교 주변과 지역의 주요 장소 및 지형 탐색하기",
+          "문헌 조사와 현장 탐방을 통해 우리 지역의 국가유산과 역사 이야기 수집·기록하기",
+          "우리 마을의 발전이나 국가유산 보존을 위한 아이디어를 모둠별로 토의하고 제안하는 글 쓰기",
+          "태블릿 협업 도구를 활용하여 테마별 '디지털 우리 마을 안내 지도'와 홍보 리플릿 제작·발표하기"
+        ],
+        values: [
+          "내가 살아가는 우리 마을과 지역의 역사·문화 및 자연환경을 아끼고 자랑스러워하는 애향심",
+          "조상들의 지혜가 담긴 국가유산의 가치를 존중하고 올바르게 계승·보존하려는 태도",
+          "지역 사회의 문제에 관심을 가지고 주민의 한 사람으로서 해결 과정에 참여하려는 공동체 의식",
+          "모둠원들과 역할을 나누어 마을 탐사 프로젝트를 끝까지 완수하는 협력적 태도"
+        ],
+        evalDomainDefault: "지리 인식·국가유산과 지역사회 참여 (탐구 및 매체 표현)",
+        evalMethodDefault: "탐구·조사 보고서 평가 · 프로젝트 평가 · 구술·발표 평가"
+      },
+
+      reading_humanities: {
+        label: "독서·온책읽기·인문·문예 교육",
+        matchRegex: /독서|깊이\s*읽기|온책|그림책|소설|동화|책\s*읽기|문학|시\s*창작|인물|줄거리|서평|감상문|연극|자전거/,
+        defaultBook: "학급 선정 온책읽기 도서 (<불량한 자전거 여행> 등) 및 주제별 그림책",
+        materials: [
+          "학급 온책읽기 도서 및 그림책 꾸러미, 단계별 깊이 읽기 독서 워크북, 질문 생성 카드",
+          "독서 감상 기록장, 인물 관계도·사건 흐름도 템플릿, 학급 독서 나눔 보드(패들렛·미니북 제작 키트)",
+          "AI 글쓰기·피드백 코스웨어(자작자작 등) 또는 디지털 북 크리에이터 도구"
+        ],
+        necessities: [
+          "1) (지역과 학교의 여건) 한 권의 책을 온전히 깊이 읽으며 사고력을 넓히고 다양한 관점에서 자신의 생각을 표현하는 인문·독서 교육의 내실화가 요구됨.",
+          "2) (학생의 필요) 작품 속 인물의 도전과 성장을 자신의 삶·진로와 연결하여 성찰하고, 친구들과 생각을 나누며 공감 능력을 기를 필요가 있음.",
+          "3) (교육과정 연계) 국어과 독서 단원 및 문학·쓰기 영역을 재구조화하여 읽기 전·중·후 전 과정을 아우르는 삶 중심 독서·글쓰기 교육을 운영하고자 함."
+        ],
+        goals: [
+          "1) 한 권의 책을 사건의 흐름과 인과 관계에 따라 깊이 있게 읽고 인물의 심리와 주제를 파악할 수 있다.",
+          "2) 작품의 주요 갈등과 주제를 자신의 삶·경험과 관련지어 성찰하고 다양한 형식(편지글, 인터뷰, 서평, 창작 이야기)으로 표현할 수 있다.",
+          "3) 친구들과 독서 토의를 통해 서로 다른 감상 관점을 존중하고 나만의 감상 북(디지털 책·문집)을 완성하여 공유할 수 있다."
+        ],
+        questions: [
+          "한 권의 책을 깊이 읽으며 발견한 인물의 선택과 성장 과정을 나의 삶과 어떻게 연결할 수 있을까?",
+          "같은 책을 읽고도 친구들마다 생각과 느낌이 다른 까닭은 무엇이며, 어떻게 깊이 있는 독서 대화를 나눌 수 있을까?"
+        ],
+        knowledge: [
+          "사건(시간)의 순서와 인과 관계에 따른 이야기의 구성 요소(인물, 사건, 배경)",
+          "작품 속 인물이 추구하는 가치와 문학 작품이 전달하는 삶의 주제 의식",
+          "독서 감상문, 인물 편지글, 가상 인터뷰 등 생각과 느낌을 표현하는 글쓰기 방법"
+        ],
+        process: [
+          "표지와 목차를 살펴보며 작품의 내용을 예측하고 함께 나눌 탐구 질문 만들기",
+          "사건의 흐름에 맞춰 줄거리를 간추리고 인물 간의 관계와 심리 변화를 도식화하기",
+          "인물의 행동과 선택에 대해 모둠별로 독서 토의·토론 및 가상 인물 인터뷰 진행하기",
+          "작품을 나의 삶·꿈과 연결하여 성찰하는 글을 쓰고 나만의 감상 책(문집·디지털 북)으로 엮어 발표하기"
+        ],
+        values: [
+          "문학 작품을 즐겨 읽으며 삶의 의미와 생명의 가치를 발견하고 향유하는 심미적 감성",
+          "작품 속 인물의 아픔과 성장에 깊이 공감하고 자신의 삶을 진지하게 성찰하는 태도",
+          "독서 토의 과정에서 친구들의 다양한 해석과 의견을 배려하고 존중하는 소통 태도"
+        ],
+        evalDomainDefault: "문학·독서 및 성찰적 글쓰기 (내용이해·의미탐구·감상표현)",
+        evalMethodDefault: "서술형·논술형 평가 · 포트폴리오(독서 기록장) 평가 · 토의·토론 평가"
+      },
+
+      ai_media_democracy: {
+        label: "민주시민·미디어 리터러시·AI 활용 글쓰기",
+        matchRegex: /민주|시민|정치|선거|국가기관|미디어|리터러시|뉴스|팩트|허위|저작권|설득|논설문|자작자작|AI\s*글쓰기|공론장|정책/,
+        defaultBook: "어린이 시사·미디어 뉴스 자료집 및 정책 제안 사례집",
+        materials: [
+          "차시별 미디어 비평·글쓰기 학습지, 생성형 AI 글쓰기 코스웨어(자작자작 등), 학급 온라인 공론장(패들렛·캔바)",
+          "어린이 뉴스 기사 및 통계 자료 카드, 팩트 체크(교차 검증) 체크리스트, 디지털 매체 윤리 가이드북"
+        ],
+        necessities: [
+          "1) (지역과 학교의 여건) 생성형 AI와 디지털 미디어 확산 속에서 정보의 신뢰성을 비판적으로 검증하고 매체 소통 윤리를 실천하는 민주시민 문해력 교육이 요구됨.",
+          "2) (학생의 필요) 일상생활과 학교·지역사회의 갈등 및 사회적 쟁점에 관심을 가지고 자신의 주장을 타당한 근거로 설득력 있게 표현하는 경험이 필요함.",
+          "3) (교육과정 연계) 사회과 민주주의·시민 참여 단원과 국어과 설득하는 글쓰기·매체 단원을 통합하여 실제적인 정책 제안 공론장을 운영하고자 함."
+        ],
+        goals: [
+          "1) 민주주의의 기본 원리와 국가기관의 역할, 시민의 정치·사회 참여 방법을 이해하고 공동체 문제를 탐색할 수 있다.",
+          "2) 생성형 AI 글쓰기 도구를 윤리적으로 활용하여 개요를 짜고, 객관적 근거 수집과 팩트 체크를 거쳐 설득하는 글을 작성·고쳐쓰기할 수 있다.",
+          "3) 완성된 정책 제안 글을 시각 매체(카드뉴스·포스터)로 변환하여 학급 공론장에서 공유하고 합리적으로 소통하는 민주 시민 태도를 실천한다."
+        ],
+        questions: [
+          "일상생활과 민주주의는 어떤 관련이 있으며, 시민은 어떻게 정치와 사회 문제 해결에 참여할 수 있을까?",
+          "AI 글쓰기 도구와 미디어 자료를 활용하여 내 의견을 효과적이고 윤리적으로 전달하는 방법은 무엇일까?"
+        ],
+        knowledge: [
+          "민주주의의 의미, 시민 주권, 국가 기관(국회, 행정부, 법원)의 역할과 권력 분립",
+          "민주적 의사결정 원리와 다양한 시민 참여 방법(선거, 캠페인, 청원 등)",
+          "쓰기 목적과 독자를 고려한 설득하는 글(서론-본론-결론)의 구조와 타당한 근거의 조건",
+          "생성형 AI 도구의 원리와 할루시네이션(환각 현상), 저작권 및 미디어 소통 윤리"
+        ],
+        process: [
+          "학교나 지역 사회의 정치·사회적 쟁점에 대한 정보를 수집하고 뉴스 미디어의 의도 분석하기",
+          "생성형 AI 도구를 활용하여 글쓰기 주제를 브레인스토밍하고 나만의 설득하는 글 개요 짜기",
+          "주장을 뒷받침할 통계·기사 자료를 수집해 팩트 체크(교차 검증)하고 초고 작성 및 고쳐쓰기",
+          "완성된 글을 카드뉴스·포스터 등 시각 매체로 변환하여 학급 정책 박람회에서 공유하고 상호 피드백 나누기"
+        ],
+        values: [
+          "공동체의 문제에 관심을 가지고 민주적인 절차로 해결하려는 능동적인 시민 의식",
+          "나와 다른 의견을 존중하고 근거를 바탕으로 합리적으로 타협하려는 민주적 태도",
+          "AI가 생성한 정보와 미디어 보도를 맹신하지 않고 비판적으로 검증·수용하는 주도적 태도",
+          "올바른 인용, 저작권 보호, 온라인 예절 등 디지털 매체 소통 윤리를 준수하려는 책임감"
+        ],
+        evalDomainDefault: "민주시민·미디어 문해력 및 설득적 글쓰기 (정의적 책임감·매체 활용력)",
+        evalMethodDefault: "토의·토론 평가 · 서술·논술형 평가 · 프로젝트(정책 제안 박람회) 평가"
+      },
+
+      sw_ai_coding: {
+        label: "인공지능·소프트웨어·코딩·창의융합 발명",
+        matchRegex: /코딩|소프트웨어|SW|알고리즘|로봇|프로그래밍|데이터|발명|특허|메이커|엔트리|마이크로비트|디지털\s*기술/,
+        defaultBook: "초등 인공지능·소프트웨어 창의 융합 워크북",
+        materials: [
+          "태블릿·노트북 실습 환경, 블록코딩 플랫폼(엔트리 등), 인공지능 데이터 체험 학습지, 알고리즘 설계 카드",
+          "피지컬 컴퓨팅·로봇 융합 교구, 생활 속 발명·문제 해결 메이커 키트, 모둠 프로젝트 설계 보드"
+        ],
+        necessities: [
+          "1) (지역과 학교의 여건) 디지털 전환 시대에 맞추어 학생들이 실생활의 문제를 데이터와 알고리즘적 사고로 해결하는 AI·SW 융합 교육이 필요함.",
+          "2) (학생의 필요) 단순한 기술 소비자를 넘어 코딩과 인공지능·발명 원리를 활용해 생활 속 불편함을 개선하는 창의적 제작 경험이 요구됨.",
+          "3) (교육과정 연계) 실과(컴퓨터와 문제 해결·생활 속 인공지능·발명) 및 수학·과학 탐구 영역을 연계하여 체험 중심 프로젝트 수업을 운영하고자 함."
+        ],
+        goals: [
+          "1) 일상생활 속 문제를 해결하기 위한 절차적 사고와 알고리즘의 원리를 이해하고 순서도로 표현할 수 있다.",
+          "2) 블록코딩 도구와 인공지능 데이터 학습 모델을 활용하여 실생활 문제 해결 프로그램이나 시제품을 설계·구현할 수 있다.",
+          "3) 인공지능과 디지털 기술이 사회에 미치는 영향을 이해하고 사람 중심의 인공지능 윤리를 실천한다."
+        ],
+        questions: [
+          "우리 주변의 불편함이나 생활 속 문제를 컴퓨터 알고리즘과 인공지능 기술로 어떻게 해결할 수 있을까?",
+          "인간과 인공지능 로봇이 더불어 살아가는 미래 사회에서 우리가 꼭 지켜야 할 디지털·AI 윤리는 무엇일까?"
+        ],
+        knowledge: [
+          "순차·반복·조건 등 알고리즘의 기본 구조와 컴퓨터 프로그래밍의 원리",
+          "아날로그·디지털 데이터의 특징과 인공지능이 데이터를 학습하여 패턴을 인식하는 원리",
+          "발명 사고 기법과 기술적 문제 해결 과정 및 지식 재산권·인공지능 윤리"
+        ],
+        process: [
+          "학교와 가정생활 속에서 해결하고 싶은 문제를 찾아 원인을 분석하고 아이디어 도출하기",
+          "문제 해결 절차를 알고리즘(순서도)으로 설계하고 블록코딩 플랫폼으로 프로그램 구현·디버깅하기",
+          "인공지능 이미지·소리·텍스트 데이터 분류 모델을 학습시키고 창의적인 융합 산출물 제작하기",
+          "모둠별 AI·발명 시제품을 시연하고 동료 피드백을 반영하여 기능을 개선·발표하기"
+        ],
+        values: [
+          "실생활의 문제를 과학적·기술적 사고로 끈기 있게 해결하려는 도전 정신과 탐구 태도",
+          "인공지능과 디지털 기술의 편향성·위험성을 경계하고 올바르게 활용하려는 인공지능 윤리 의식",
+          "모둠원들과 아이디어를 공유하고 협력하여 창의적 산출물을 완성하는 협업 태도"
+        ],
+        evalDomainDefault: "디지털 사회와 인공지능 · 기술적 문제 해결 (알고리즘·실습)",
+        evalMethodDefault: "실기·실습 평가 · 프로젝트(시제품·프로그램 제작) 평가 · 관찰 평가"
+      },
+
+      art_music_pe: {
+        label: "문화예술·미술·음악·신체표현 융합",
+        matchRegex: /미술|음악|예술|연극|뮤지컬|공연|전시|합주|합창|국악|민요|디자인|캐릭터|수묵|판화|체육|스포츠|무용|신체\s*표현|건강\s*체력/,
+        defaultBook: "초등 문화예술·신체표현 창작 활동 자료집",
+        materials: [
+          "다양한 조형·회화·공예 표현 재료 및 용구, 악기(리코더·단소·타악기·스마트 악기 앱), 신체 표현 소품",
+          "시청각 예술 작품 감상 자료, 학급 작은 미술관·음악회 기획 워크북, 모둠 창작 스토리보드"
+        ],
+        necessities: [
+          "1) (지역과 학교의 여건) 학생들의 예술적 감수성과 건강한 신체 표현력을 기르기 위해 체험과 창작 중심의 문화예술·체육 융합 교육이 요구됨.",
+          "2) (학생의 필요) 자신의 감정과 생각을 조형·소리·움직임 등 다양한 예술 매체로 자유롭게 표현하고 친구들과 소통할 기회가 필요함.",
+          "3) (교육과정 연계) 미술·음악·체육 교과의 표현 및 감상 영역을 유기적으로 통합하여 학급 예술제·전시회 프로젝트를 운영하고자 함."
+        ],
+        goals: [
+          "1) 주변 대상과 예술 작품에서 조형 요소·음악 요소·움직임 요소의 아름다움을 발견하고 감상할 수 있다.",
+          "2) 다양한 표현 재료와 악기, 신체 움직임을 활용하여 자신의 생각과 느낌을 창의적인 작품으로 표현할 수 있다.",
+          "3) 친구들과 협력하여 학급 전시회나 작은 음악회·공연을 기획·발표하고 서로의 작품을 존중하며 감상을 나눈다."
+        ],
+        questions: [
+          "나의 마음과 상상을 색채, 형태, 소리, 움직임으로 어떻게 생생하고 아름답게 표현할 수 있을까?",
+          "친구들과 함께 만드는 학급 미술관·음악회를 통해 일상 공간을 어떻게 예술로 채울 수 있을까?"
+        ],
+        knowledge: [
+          "선·색·형·질감·비례·율동 등 조형 요소와 원리 및 다양한 표현 기법의 특징",
+          "박·장단·가락·셈여림·화음 등 기초 음악 요소와 우리 국악 및 세계 음악 문화유산의 특징",
+          "신체·공간·노력·관계 등 움직임 요소와 건강한 체력 관리 및 안전한 신체 활동 방법"
+        ],
+        process: [
+          "주변 자연물과 일상 공간, 예술 작품을 오감으로 탐색하고 주제와 표현 아이디어 발상하기",
+          "표현 의도에 알맞은 재료·악기·신체 움직임을 선택하여 개별 및 모둠 협동 작품 창작하기",
+          "학급 전시회·음악회·발표회를 함께 기획하고 역할을 나누어 작품 전시 및 공연 발표하기",
+          "서로의 작품과 연주를 감상하며 작품의 내용과 형식에 대해 질문하고 따뜻한 비평 나누기"
+        ],
+        values: [
+          "일상 속에서 아름다움을 발견하고 예술 활동을 즐기며 삶을 풍요롭게 가꾸는 심미적 태도",
+          "고정관념에서 벗어나 자신만의 독창적인 발상과 표현에 도전하는 창의적 태도",
+          "서로 다른 예술적 표현과 감상 관점을 편견 없이 존중하고 협력하여 공연·전시를 완성하는 공동체 의식"
+        ],
+        evalDomainDefault: "미적 탐색·창작 표현·감상 및 신체 표현",
+        evalMethodDefault: "실기·실습 평가 · 포트폴리오(작품집) 평가 · 동료 상호 평가 · 관찰 평가"
+      },
+
+      career_character: {
+        label: "진로·자아탐색·인성·공동체 교육",
+        matchRegex: /진로|직업|적성|흥미|꿈|자아|인성|감정|마음|공감|배려|인권|다문화|세계\s*시민|평화|통일|봉사/,
+        defaultBook: "어린이 진로·마음 성장 워크북 및 인물 이야기",
+        materials: [
+          "주니어 커리어넷 진로 탐색 자료, 감정·강점 찾기 카드, 차시별 자기 성찰·진로 설계 포트폴리오",
+          "공감·인권·다문화 사례 영상 및 토의 활동지, 학급 행복 공동체 프로젝트 보드"
+        ],
+        necessities: [
+          "1) (지역과 학교의 여건) 급변하는 미래 사회 속에서 학생들이 자신의 고유한 강점과 적성을 발견하고 건강한 자아존중감을 형성하는 진로·인성 교육이 필요함.",
+          "2) (학생의 필요) 자신의 감정을 올바르게 이해·조절하고, 타인의 입장에 공감하며 더불어 살아가는 따뜻한 관계 맺기 경험이 요구됨.",
+          "3) (교육과정 연계) 도덕·실과·국어·사회 교과의 자아 성찰 및 진로·공동체 단원을 연계하여 학생 맞춤형 진로·인성 프로젝트를 운영하고자 함."
+        ],
+        goals: [
+          "1) 자신의 흥미, 적성, 강점을 탐색하고 다양한 직업 세계의 역할과 도덕적 가치를 이해할 수 있다.",
+          "2) 나와 타인의 감정을 소중히 여기며 공감적 대화와 배려·봉사를 통해 평화로운 학급 공동체를 가꿀 수 있다.",
+          "3) 미래 사회의 변화를 고려하여 자기주도적인 진로 발달 계획과 생활 실천 목표를 수립하고 꾸준히 실천한다."
+        ],
+        questions: [
+          "내가 진정으로 좋아하고 잘하는 일은 무엇이며, 나와 세상에 이로운 꿈을 이루기 위해 어떤 노력이 필요할까?",
+          "서로 다름을 존중하고 모두가 행복한 학급과 지구촌 공동체를 만들기 위해 우리는 무엇을 실천할 수 있을까?"
+        ],
+        knowledge: [
+          "자아존중감과 자주적인 삶의 의미 및 자신의 강점·흥미·적성의 특성",
+          "다양한 직업 세계의 변화와 직업이 지닌 사회적·도덕적 가치",
+          "공감, 배려, 공정, 인권 존중, 평화, 세계 시민성의 의미와 필요성"
+        ],
+        process: [
+          "강점 탐색 검사와 자기 성찰 활동을 통해 나의 흥미·적성 및 소중한 가치 발견하기",
+          "관심 있는 미래 직업과 인물을 조사하고 인터뷰·체험 활동을 통해 진로 탐색하기",
+          "일상 속 갈등이나 인권·편견 문제를 두고 관점을 바꾸어 생각하며 공감 토의하기",
+          "나의 꿈 로드맵(진로 포트폴리오)과 학급 행복 공동체 실천 프로젝트를 기획하고 발표하기"
+        ],
+        values: [
+          "자신을 소중히 여기고 내 삶의 주인으로서 스스로 계획하고 실천하려는 자주적 태도",
+          "타인의 아픔과 감정에 깊이 공감하고 편견 없이 다름을 존중하는 포용적 태도",
+          "공동체의 행복과 정의를 위해 나눔과 봉사를 기꺼이 실천하려는 도덕적 책임감"
+        ],
+        evalDomainDefault: "자아 성찰·진로 설계 및 공동체 관계 (정의적·실천적 영역)",
+        evalMethodDefault: "자기 성찰 평가 · 포트폴리오(진로 설계서) 평가 · 관찰 평가 · 토의·토론 평가"
+      }
+    };
+
+    // 2022 개정 교육과정 교과별 공식 평가 영역 목록
+    const CURRICULUM_EVAL_DOMAINS_BY_SUBJECT = {
+      "공통": [
+        "지식·이해 (핵심 개념 및 원리 이해)",
+        "과정·기능 (탐구·문제해결·표현 기능)",
+        "가치·태도 (정의적 영역·실천 태도)"
       ],
-      knowledge: [
-        "민주주의의 의미, 시민 주권, 국가 기관(국회, 행정부, 법원)의 역할과 권력 분립",
-        "민주적 의사결정 원리와 다양한 정치·사회 참여 방법(선거, 캠페인, 청원 등)",
-        "쓰기 목적과 독자를 고려한 설득하는 글(서론-본론-결론)의 구조와 특징",
-        "생성형 AI 글쓰기 도구의 원리와 올바른 미디어 소통 윤리 및 저작권",
-        "사건(시간)의 순서와 인과 관계에 따른 이야기 구조와 인물의 심리 변화",
-        "작품 속 주요 갈등과 인물의 가치관 및 삶과 연결된 주제 의식",
-        "지도의 요소(방위, 기호, 축척)와 우리 지역의 자연환경·인문환경 및 국가유산의 특징",
-        "생태계 구성 요소(생물·비생물 요소)의 상호작용과 기후변화가 환경에 미치는 영향",
-        "데이터와 알고리즘의 기본 원리 및 실생활 문제 해결을 위한 디지털·AI 기술의 활용 사례",
-        "자신의 발달 특징과 강점 이해 및 다양한 직업 세계의 도덕적·사회적 가치"
+      "과학": [
+        "[과학] 생명 (생물과 환경·생태계 보전)",
+        "[과학] 지구와 우주 (기후변화와 우리 생활·밤하늘·지구)",
+        "[과학] 운동과 에너지 (힘·빛·열·전기·자석)",
+        "[과학] 물질 (물체와 물질·물의 상태 변화·용액·기체)",
+        "[과학] 과학과 사회 (과학과 안전·지속가능성·진로)"
       ],
-      process: [
-        "지역 사회나 국가의 정치·사회적 문제에 대한 정보 수집 및 쟁점 분석하기",
-        "AI 글쓰기 도구를 활용하여 다양한 주제의 아이디어 생성 및 개요 짜기",
-        "주장을 뒷받침할 객관적 자료(통계, 기사) 수집 및 교차 검증(팩트 체크)하기",
-        "타당한 근거를 바탕으로 논리적인 주장이 담긴 초고 작성 및 AI 윤문·고쳐쓰기",
-        "완성된 글을 시각 매체(카드뉴스, 포스터, 학급 게시판, 패들렛 등)로 변환하여 공유하고 의견 나누기",
-        "사건의 흐름에 맞춰 글을 요약하고 인물 간의 관계를 도식화하여 파악하기",
-        "작품의 주요 내용에 대해 비판적으로 감상하고 모둠 토의 및 가상 인물 인터뷰하기",
-        "자작자작 플랫폼과 AI 피드백을 활용하여 나의 삶과 연계한 성찰 글쓰기 및 디지털 책 제작하기",
-        "스마트 지도와 현장 탐사를 통해 우리 지역의 생태 자원과 국가유산 정보 조사·기록하기",
-        "태블릿과 디지털 협업 도구를 활용하여 우리 마을 안내 지도 및 생태 보호 캠페인 자료 제작·발표하기"
+      "사회": [
+        "[사회] 자연환경과 인간 생활 (지역·세계의 환경과 삶)",
+        "[사회] 지리 인식·장소와 지역 (지도와 우리 지역 탐구)",
+        "[사회] 역사·국가유산 (우리 지역의 국가유산과 생활 모습)",
+        "[사회] 정치·민주주의와 시민 참여 (민주적 해결과 자치)",
+        "[사회] 경제·지속가능한 선택 (합리적 선택과 교류)",
+        "[사회] 사회 변화와 공존 (다양한 문화 존중·지구촌 평화)"
       ],
-      values: [
-        "공동체의 문제에 관심을 가지고 능동적으로 해결하려는 민주 시민 의식",
-        "나와 다른 의견을 존중하고 합리적으로 타협하려는 민주적 의사소통 태도",
-        "AI가 생성한 정보를 맹신하지 않고 비판적으로 수용하는 자기주도적 태도",
-        "올바른 디지털 매체 소통 윤리와 저작권을 준수하려는 책임감",
-        "도전과 극복의 의미를 탐색하며 자신의 삶과 진로를 깊이 성찰하는 태도",
-        "서로의 글을 감상하며 타인의 아픔과 성장에 깊이 공감하는 심미적 감성",
-        "우리 지역과 고장의 역사·문화 및 국가유산을 아끼고 사랑하는 애향심",
-        "인간과 자연이 공생하는 지속가능한 생태 환경을 보전하려는 실천 의지",
-        "친구들과 협동하여 공동의 프로젝트를 완수하고 배움을 나누는 협력적 태도",
-        "자신의 삶을 주체적으로 가꾸고 미래 사회의 변화에 적극적으로 도전하는 자세"
+      "국어": [
+        "[국어] 듣기·말하기 (토의·토론·면담·발표)",
+        "[국어] 읽기 (중심 생각·추론·비판적 읽기·독서)",
+        "[국어] 쓰기 (보고하는 글·설득하는 글·기행문·감상문)",
+        "[국어] 문학 (작품 감상·성찰·시와 이야기 창작)",
+        "[국어] 매체 (복합양식 매체 자료 탐색·제작·소통 윤리)",
+        "[국어] 문법 (우리말의 가치·바른 문장과 어휘 활용)"
+      ],
+      "도덕": [
+        "[도덕] 자연과의 관계 (생명 존중·생태 감수성·지속가능성)",
+        "[도덕] 자신과의 관계 (자주·성실·정직·도덕적 성찰·진로)",
+        "[도덕] 타인과의 관계 (효·우애·배려·공감·다름 존중)",
+        "[도덕] 사회·공동체와의 관계 (공정·인권·정의·디지털 윤리·통일)"
+      ],
+      "수학": [
+        "[수학] 수와 연산 (수의 개념과 사칙연산 원리)",
+        "[수학] 변화와 관계 (규칙 찾기와 대응·비례 관계)",
+        "[수학] 도형과 측정 (평면·입체도형과 길이·넓이·시간)",
+        "[수학] 자료와 가능성 (표와 그래프 수집·해석·평균)"
+      ],
+      "실과": [
+        "[실과] 인간 발달과 주도적 삶 (발달과 가정생활·진로 설계)",
+        "[실과] 생활 환경과 지속가능한 선택 (동식물·식생활·의생활·생태)",
+        "[실과] 기술적 문제 해결과 혁신 (수송·건설·발명과 특허·로봇)",
+        "[실과] 디지털 사회와 인공지능 (알고리즘·프로그래밍·AI 데이터)"
+      ],
+      "체육": [
+        "[체육] 운동 (체력 증진·건강 및 안전한 생활 습관)",
+        "[체육] 스포츠 (기술형·전략형·생태형 스포츠와 스포츠맨십)",
+        "[체육] 표현 (기본·리듬·도구·전통·현대 움직임 표현)"
+      ],
+      "음악": [
+        "[음악] 연주 (노래 부르기·악기 연주하기·소리의 어울림)",
+        "[음악] 감상 (음악 요소 탐색·국악 및 세계 음악 문화유산 감상)",
+        "[음악] 창작 (즉흥 표현·가락 바꾸기·조건에 따라 음악 만들기)"
+      ],
+      "미술": [
+        "[미술] 미적 탐색 (자연물·인공물·시각 문화 감각 탐색)",
+        "[미술] 표현 (주제 발상·조형 요소와 재료 활용 입체·평면 제작)",
+        "[미술] 감상 (작품의 내용과 형식 분석·미술 문화 참여와 존중)"
+      ],
+      "영어": [
+        "[영어] 이해 (담화나 글 듣고·읽고 세부 정보와 맥락 파악하기)",
+        "[영어] 표현 (실생활 의사소통 말하기 및 어구·문장 쓰기)"
       ]
     };
 
-    const REPORT_CONCEPT_RECOMMENDATION_BANK = [
-      { category: "내용이해", text: "▸ 사건(시간)의 순서에 따라 작품의 줄거리와 흐름 이해하기" },
-      { category: "내용이해", text: "▸ 사건의 흐름과 인과 관계에 맞춰 핵심 내용 요약·정리하기" },
-      { category: "내용이해", text: "▸ 민주주의의 기본 원리와 국가기관의 역할 및 사회 쟁점 파악하기" },
-      { category: "내용이해", text: "▸ 우리 지역의 자연환경·인문환경 특징과 생태계 구성 요소 이해하기" },
-      { category: "의미탐구", text: "▸ 주요 사건과 인물의 선택에 대해 비판적으로 감상하고 모둠 토의하기" },
-      { category: "의미탐구", text: "▸ 기억에 남는 인물을 선정하여 질문 만들고 가상 인터뷰 진행하기" },
-      { category: "의미탐구", text: "▸ 다양한 미디어와 AI 생성 정보의 신뢰성을 교차 검증(팩트 체크)하기" },
-      { category: "의미탐구", text: "▸ 지역사회의 환경·생활 문제를 조사하고 해결 방안 브레인스토밍하기" },
-      { category: "감상표현", text: "▸ 작품의 주제를 나의 삶·진로와 연계하여 성찰하는 글쓰기" },
-      { category: "감상표현", text: "▸ 자작자작 AI 피드백과 동료 평가를 반영하여 초고를 고쳐 쓰고 디지털 책 완성하기" },
-      { category: "감상표현", text: "▸ 타당한 근거를 들어 설득하는 정책 제안문을 작성하고 카드뉴스로 변환·발표하기" },
-      { category: "감상표현", text: "▸ 서로의 작품과 글을 감상하며 따뜻한 공감 댓글과 피드백 나누기" }
+    // 교육과정 제시 공식 평가 방법·유형 목록
+    const CURRICULUM_EVAL_METHODS_LIST = [
+      "관찰 평가 (수업 참여·태도 관찰)",
+      "프로젝트 평가 (주제 탐구·협동 산출물)",
+      "탐구·조사 보고서 평가 (관찰·조사 기록)",
+      "포트폴리오 평가 (차시별 활동철·성장 기록)",
+      "실험·실습·실기 평가 (조작·제작·표현 수행)",
+      "서술형·논술형 평가 (생각·주장 글쓰기)",
+      "토의·토론 평가 (근거 제시·합리적 의사소통)",
+      "구술·발표 평가 (매체 활용 발표·질의응답)",
+      "산출물(캠페인·시각매체) 평가",
+      "자기 성찰 평가 (배움 일지·성찰 체크리스트)",
+      "동료 상호 평가 (모둠 기여도·상호 피드백)",
+      "체크리스트(점검표) 평가"
     ];
+
+    function detectThemeCategory(activityAndIntentText, subjects) {
+      const text = String(activityAndIntentText || "");
+      // 우선순위에 따라 매칭 점수 산출
+      const scores = {};
+      Object.keys(AUTONOMOUS_THEME_DB).forEach(k => {
+        scores[k] = 0;
+        const matches = text.match(new RegExp(AUTONOMOUS_THEME_DB[k].matchRegex.source, "gi"));
+        if (matches) scores[k] += matches.length * 5;
+      });
+
+      // 과목 힌트 반영
+      if ((subjects || []).includes("과학") && /생태|환경|기후|식물|동물|자연|탄천|맹산/.test(text)) {
+        scores.eco_climate += 15;
+      }
+      if ((subjects || []).includes("사회") && /지역|마을|지도|유산|역사/.test(text) && !/생태|기후/.test(text)) {
+        scores.local_heritage += 10;
+      }
+
+      let bestKey = "eco_climate";
+      let bestScore = -1;
+      Object.keys(scores).forEach(k => {
+        if (scores[k] > bestScore) {
+          bestScore = scores[k];
+          bestKey = k;
+        }
+      });
+
+      if (bestScore === 0) {
+        if ((subjects || []).includes("과학")) return "eco_climate";
+        if ((subjects || []).includes("실과")) return "sw_ai_coding";
+        if ((subjects || []).includes("미술") || (subjects || []).includes("음악") || (subjects || []).includes("체육")) return "art_music_pe";
+        if ((subjects || []).includes("도덕")) return "career_character";
+        if ((subjects || []).includes("사회")) return "local_heritage";
+        return "reading_humanities";
+      }
+      return bestKey;
+    }
 
     function parseOverviewMetadata(mode) {
       ensureAutonomousDocState();
@@ -13271,41 +13849,51 @@
           if (rawSubjStr.includes(s)) subjects.push(s);
         });
       }
-      if (subjects.length === 0) {
-        subjects = grade <= 2 ? ["국어", "바른 생활", "슬기로운 생활", "즐거운 생활"] : ["국어", "사회"];
-      }
-
-      // 4) 텍스트 전체 합산 후 핵심 키워드 추출
-      const combinedText = [
+      // 만약 교과 입력칸에 아직 안 적었더라도 설계 의도나 활동명에 '생태/환경/기후'가 있으면 과학·사회 자동 추론
+      const coreOverviewText = [
         doc.activityName || "",
-        doc.designActivityTitle || "",
-        doc.bookName || "",
-        doc.materialDesc || "",
         doc.designIntent || "",
-        doc.necessityList || "",
-        doc.goalList || "",
         doc.needSchool || "",
-        doc.needStudent || "",
-        doc.purposeNarrative || ""
+        doc.needStudent || ""
       ].join(" ");
 
+      if (subjects.length === 0) {
+        if (/생태|환경|기후|동식물/.test(coreOverviewText)) subjects = ["과학", "사회", "국어"];
+        else if (grade <= 2) subjects = ["국어", "바른 생활", "슬기로운 생활", "즐거운 생활"];
+        else subjects = ["국어", "사회"];
+      }
+
+      // 4) 핵심 테마 분류 (이전 교수학습자료 텍스트에 남아 있던 '자작자작' 등에 오염되지 않도록 순수 개관 텍스트로 판별!)
+      const themeKey = detectThemeCategory(coreOverviewText, subjects);
+      const themeObj = AUTONOMOUS_THEME_DB[themeKey] || AUTONOMOUS_THEME_DB.eco_climate;
+
       const keywordCandidates = [
-        "AI", "인공지능", "자작자작", "글쓰기", "논설문", "설득", "토의", "토론", "민주주의", "시민", "정치", "선거",
-        "국가기관", "미디어", "리터러시", "뉴스", "팩트", "저작권", "윤리", "독서", "깊이 읽기", "책", "자전거",
-        "인터뷰", "편지", "진로", "꿈", "성찰", "공감", "생태", "환경", "기후", "탄소", "마을", "지역", "지도",
-        "국가유산", "역사", "문화", "데이터", "코딩", "로봇", "발명", "예술", "미술", "음악", "신체", "스포츠", "안전"
+        "생태", "환경", "기후", "탄소", "동식물", "탄천", "맹산", "숲", "자연", "보전",
+        "지역", "마을", "지도", "국가유산", "역사", "문화",
+        "독서", "깊이 읽기", "책", "자전거", "인터뷰", "편지", "성찰", "공감",
+        "AI", "인공지능", "자작자작", "글쓰기", "논설문", "설득", "토의", "토론", "민주주의", "시민", "정치", "선거", "미디어", "리터러시", "뉴스", "팩트", "저작권", "윤리",
+        "데이터", "코딩", "로봇", "발명", "예술", "미술", "음악", "신체", "스포츠", "진로", "꿈"
       ];
-      const matchedKeywords = keywordCandidates.filter(kw => combinedText.toLowerCase().includes(kw.toLowerCase()));
+      const matchedKeywords = keywordCandidates.filter(kw => coreOverviewText.toLowerCase().includes(kw.toLowerCase()));
+
+      // 만약 현재 교수학습자료(materialDesc)에 다른 테마의 전용 도구('자작자작', 'AI 글쓰기', '불량한 자전거 여행')가 남아있고 현재 테마가 해당 테마가 아니라면 테마 맞춤 교수학습자료로 자동 보정
+      let currentMat = isReport ? (doc.materialDesc || "") : (doc.materialDesc || "");
+      if (themeKey !== "ai_media_democracy" && themeKey !== "reading_humanities" && /자작자작|AI\s*글쓰기|불량한\s*자전거/.test(currentMat)) {
+        currentMat = themeObj.materials[0];
+      }
+      const materialInfo = currentMat || themeObj.materials[0];
 
       return {
         grade,
         totalHours,
         numBlocks,
         subjects,
-        combinedText,
+        themeKey,
+        themeObj,
+        combinedText: coreOverviewText,
         matchedKeywords,
-        activityName: doc.activityName || "학교자율시간 프로젝트",
-        materialInfo: [doc.bookCheck1 ? doc.bookName : "", doc.bookCheck2 ? doc.materialDesc : ""].filter(Boolean).join(" · ") || "자체 제작 학습 자료 및 에듀테크 도구"
+        activityName: doc.activityName || `초등 ${grade}학년 ${themeObj.label} 프로젝트`,
+        materialInfo
       };
     }
 
@@ -13320,23 +13908,29 @@
         ...meta.activityName.split(/[\s,·/()]+/).filter(w => w.length >= 2)
       ];
 
-      // 우선 선택된 편성 교과의 모든 단원·성취기준 탐색
-      const targetSubjs = meta.subjects.filter(s => gradeDb[s]);
-      const subjsToScan = targetSubjs.length > 0 ? targetSubjs : Object.keys(gradeDb);
+      // 테마가 생태·환경이면 과학·사회·도덕·국어 관련 단원도 함께 스캔하여 최적의 성취기준 확보
+      let subjsToScan = [...meta.subjects.filter(s => gradeDb[s])];
+      if (meta.themeKey === "eco_climate") {
+        ["과학", "사회", "도덕", "국어", "실과"].forEach(s => {
+          if (gradeDb[s] && !subjsToScan.includes(s)) subjsToScan.push(s);
+        });
+      } else if (subjsToScan.length === 0) {
+        subjsToScan = Object.keys(gradeDb);
+      }
 
       subjsToScan.forEach(subj => {
         const units = gradeDb[subj] || [];
         units.forEach(u => {
           (u.standards || []).forEach(s => {
             let score = 0;
-            if (meta.subjects.includes(subj)) score += 5;
+            if (meta.subjects.includes(subj)) score += 6;
             const hay = `${u.unit} ${s.code} ${s.text} ${s.topic || ""}`;
             searchTerms.forEach(term => {
-              if (term && hay.includes(term)) score += 4;
+              if (term && hay.includes(term)) score += 8;
             });
-            // 자주 쓰이는 핵심 역량 키워드 가산점
-            if (/글|쓰기|설득|매체|독서|생각|의견|토의|토론|민주|시민|지역|생태|환경|진로|문화|창작|데이터|인공지능/.test(hay)) {
-              score += 1;
+            // 테마 정규식과 일치하면 높은 가산점 부여
+            if (meta.themeObj && meta.themeObj.matchRegex.test(hay)) {
+              score += 12;
             }
             candidates.push({
               domain: subj,
@@ -13350,7 +13944,6 @@
         });
       });
 
-      // 중복 코드 제거 및 점수순 정렬
       const seen = new Set();
       const unique = [];
       candidates.sort((a, b) => b.score - a.score).forEach(item => {
@@ -13363,27 +13956,140 @@
       return unique;
     }
 
-    // 실시간 개관 요약 배너 업데이트
+    // 실시간 개관 요약 배너 & 추천 교수학습자료 칩 업데이트
     function updateLiveOverviewBanner(mode) {
       const meta = parseOverviewMetadata(mode);
       const kwText = meta.matchedKeywords.length > 0
         ? `핵심 키워드: ${meta.matchedKeywords.slice(0, 6).join(", ")}`
-        : "핵심 키워드 자동 분석 중";
-      const summaryText = `인식된 설정: ${meta.grade}학년 · ${meta.subjects.join(", ")} · 총 ${meta.totalHours}시간 (${meta.numBlocks}개 차시 블록) · ${kwText}`;
+        : `분류 테마: ${meta.themeObj.label}`;
+      const summaryText = `인식된 설정: ${meta.grade}학년 · [${meta.themeObj.label}] · ${meta.subjects.join(", ")} · 총 ${meta.totalHours}시간 (${meta.numBlocks}개 차시 블록) · ${kwText}`;
 
       const elId = mode === "report" ? "repLiveDetectSummary" : "planLiveDetectSummary";
       const el = document.getElementById(elId);
       if (el) el.textContent = summaryText;
+
+      // 계획서 교수학습자료 추천 칩 렌더링
+      const chipBox = document.getElementById("planMaterialRecChips");
+      if (chipBox && mode === "plan") {
+        chipBox.innerHTML = "";
+        (meta.themeObj.materials || []).forEach((matStr, idx) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          const isCurrent = state.autonomousDocs.plan.materialDesc === matStr;
+          btn.className = isCurrent
+            ? "px-2 py-0.5 rounded-md bg-purple-600 text-white text-[11px] font-extrabold transition"
+            : "px-2 py-0.5 rounded-md bg-purple-50 hover:bg-purple-100 text-purple-800 border border-purple-200 text-[11px] font-semibold transition";
+          btn.textContent = `추천 자료 ${idx + 1}: ${matStr.slice(0, 34)}...`;
+          btn.title = matStr;
+          btn.addEventListener("click", () => {
+            state.autonomousDocs.plan.materialDesc = matStr;
+            const inp = document.getElementById("planMaterialDesc");
+            if (inp) inp.value = matStr;
+            saveStateToCache();
+            updateLiveOverviewBanner("plan");
+            renderPlanMatrixRecommendationPicker();
+            synthesizeLessonPlanFromEarlierInputs("plan", false);
+            showToast(`활동에 적합한 교수학습자료가 적용되었습니다.`, "success");
+          });
+          chipBox.appendChild(btn);
+        });
+      }
     }
 
-    // [기능 1] 계획서 3-가. 내용체계표 추천 문장 선택기 렌더링
+    // [신규 기능] 2-가. 활동 개설의 필요성 & 2-나. 활동 목표 추천 문장 선택기 렌더링
+    function renderPlanNecessityAndGoalPickers() {
+      ensureAutonomousDocState();
+      const p = state.autonomousDocs.plan;
+      const meta = parseOverviewMetadata("plan");
+      const themeObj = meta.themeObj;
+      const topStds = getRecommendedStandardsFromArchive(meta).slice(0, 3);
+
+      // 1) 필요성 추천 문장 목록
+      const necBox = document.getElementById("planNecessityRecList");
+      if (necBox) {
+        necBox.innerHTML = "";
+        const necCandidates = [
+          ...(themeObj.necessities || []),
+          `• (${meta.grade}학년 발달 및 학생 필요) '${meta.activityName}' 주제를 통해 학생들이 교실 지식을 실생활 및 지역사회 문제 해결에 주도적으로 적용해 보는 경험이 필요함.`,
+          `• (${meta.subjects.join("·")} 교과 융합 필요성) ${topStds.map(s => s.code).join(", ")} 성취기준을 유기적으로 통합하여 삶과 연결된 깊이 있는 배움을 구현하고자 함.`
+        ];
+        necCandidates.forEach(item => {
+          const core = item.replace(/^[0-9)\s•▸\-]+/, "").trim();
+          const isSelected = String(p.necessityList || "").includes(core.slice(0, 22));
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = isSelected
+            ? "w-full text-left p-1.5 rounded border border-purple-500 bg-purple-50/90 text-purple-950 text-[11px] font-bold flex items-start justify-between gap-1.5 transition"
+            : "w-full text-left p-1.5 rounded border border-slate-200 hover:border-purple-300 hover:bg-purple-50/30 text-slate-700 text-[11px] flex items-start justify-between gap-1.5 transition";
+          btn.innerHTML = `
+            <span class="leading-snug">${item}</span>
+            <span class="shrink-0 px-1.5 py-0.5 rounded text-[10px] font-extrabold ${isSelected ? 'bg-purple-600 text-white' : 'bg-slate-100 text-slate-600'}">${isSelected ? '적용됨' : '+ 선택'}</span>
+          `;
+          btn.addEventListener("click", () => {
+            const lines = String(p.necessityList || "").split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+            const idx = lines.findIndex(l => l.includes(core.slice(0, 22)));
+            if (idx >= 0) {
+              lines.splice(idx, 1);
+            } else {
+              lines.push(`${lines.length + 1}) ${core}`);
+            }
+            p.necessityList = lines.map((l, i) => `${i + 1}) ${l.replace(/^[0-9)\s•▸\-]+/, "")}`).join("\n");
+            const ta = document.getElementById("planNecessityList");
+            if (ta) ta.value = p.necessityList;
+            saveStateToCache();
+            renderPlanNecessityAndGoalPickers();
+          });
+          necBox.appendChild(btn);
+        });
+      }
+
+      // 2) 활동 목표 추천 문장 목록
+      const goalBox = document.getElementById("planGoalRecList");
+      if (goalBox) {
+        goalBox.innerHTML = "";
+        const goalCandidates = [
+          ...(themeObj.goals || []),
+          ...topStds.map((s, i) => `${i + 4}) [${s.domain} ${s.code} 연계] ${s.text}`)
+        ];
+        goalCandidates.forEach(item => {
+          const core = item.replace(/^[0-9)\s•▸\-]+/, "").trim();
+          const isSelected = String(p.goalList || "").includes(core.slice(0, 22));
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = isSelected
+            ? "w-full text-left p-1.5 rounded border border-purple-500 bg-purple-50/90 text-purple-950 text-[11px] font-bold flex items-start justify-between gap-1.5 transition"
+            : "w-full text-left p-1.5 rounded border border-slate-200 hover:border-purple-300 hover:bg-purple-50/30 text-slate-700 text-[11px] flex items-start justify-between gap-1.5 transition";
+          btn.innerHTML = `
+            <span class="leading-snug">${item}</span>
+            <span class="shrink-0 px-1.5 py-0.5 rounded text-[10px] font-extrabold ${isSelected ? 'bg-purple-600 text-white' : 'bg-slate-100 text-slate-600'}">${isSelected ? '적용됨' : '+ 선택'}</span>
+          `;
+          btn.addEventListener("click", () => {
+            const lines = String(p.goalList || "").split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+            const idx = lines.findIndex(l => l.includes(core.slice(0, 22)));
+            if (idx >= 0) {
+              lines.splice(idx, 1);
+            } else {
+              lines.push(`${lines.length + 1}) ${core}`);
+            }
+            p.goalList = lines.map((l, i) => `${i + 1}) ${l.replace(/^[0-9)\s•▸\-]+/, "")}`).join("\n");
+            const ta = document.getElementById("planGoalList");
+            if (ta) ta.value = p.goalList;
+            saveStateToCache();
+            renderPlanNecessityAndGoalPickers();
+          });
+          goalBox.appendChild(btn);
+        });
+      }
+    }
+
+    // [기능 1] 계획서 3-가. 내용체계표 추천 문장 선택기 렌더링 (테마별 전용 DB 사용 · 부적합 도구 배제!)
     function renderPlanMatrixRecommendationPicker() {
       ensureAutonomousDocState();
       const activeCat = state.autonomousDocs.activeMatrixRecCat || "questions";
       const p = state.autonomousDocs.plan;
       const meta = parseOverviewMetadata("plan");
+      const themeObj = meta.themeObj;
 
-      // 탭 스타일 업데이트
       document.querySelectorAll("#planMatrixRecTabGroup .pmat-tab").forEach(btn => {
         const cat = btn.getAttribute("data-mcat");
         btn.className = cat === activeCat
@@ -13407,24 +14113,29 @@
       const targetField = fieldMap[activeCat] || "matrixQuestions";
       const currentText = String(p[targetField] || "");
 
-      // 기본 추천 뱅크 + 현재 학년/교과 성취기준에서 파생된 맞춤형 문장 결합
-      const baseItems = [...(MATRIX_RECOMMENDATION_BANK[activeCat] || [])];
-      const topStds = getRecommendedStandardsFromArchive(meta).slice(0, 8);
+      // 현재 감지된 테마의 전용 문장 뱅크 + 현재 학년/교과 성취기준에서 파생된 문장 결합 (다른 테마의 부적합 도구 배제!)
+      const baseItems = [...(themeObj[activeCat] || [])];
+      const topStds = getRecommendedStandardsFromArchive(meta).slice(0, 6);
 
       topStds.forEach(s => {
         const cleanTopic = String(s.topic || s.text).replace(/\.$/, "");
+        const stdText = String(s.text || "").replace(/\.$/, "");
         if (activeCat === "questions") {
-          baseItems.unshift(`'${meta.activityName}' 활동에서 ${cleanTopic}을(를) 우리 삶에 어떻게 적용할 수 있을까?`);
+          baseItems.push(`'${meta.activityName}' 활동에서 ${cleanTopic}을(를) 우리 생활과 지역사회에 어떻게 연결할 수 있을까?`);
         } else if (activeCat === "knowledge") {
-          baseItems.unshift(`${s.domain}과 연계한 ${cleanTopic}의 핵심 원리와 개념`);
+          baseItems.push(`[${s.domain}] ${cleanTopic}의 핵심 개념과 원리 (${s.code})`);
         } else if (activeCat === "process") {
-          baseItems.unshift(`${cleanTopic} 및 모둠별 협력 탐구·표현하기 (${s.code})`);
+          baseItems.push(`${meta.materialInfo.split(",")[0]}을(를) 활용하여 ${cleanTopic} 탐구 및 결과물 표현하기 (${s.code})`);
         } else if (activeCat === "values") {
-          baseItems.unshift(`${cleanTopic} 과정에서 배려와 책임을 실천하는 태도`);
+          // 성취기준 문장에서 구체적인 태도·가치 문장 생성
+          if (/태도|마음|가치|존중|보전|실천|사랑|배려|관심/.test(stdText)) {
+            baseItems.unshift(`${stdText.replace(/(기른다|갖는다|이해한다|실천한다|탐색한다)$/, "실천하려는 태도")} (${s.code})`);
+          } else {
+            baseItems.push(`${cleanTopic}을(를) 통해 발견한 가치를 일상생활 속에서 주도적으로 실천하려는 태도`);
+          }
         }
       });
 
-      // 중복 제거
       const uniqueItems = Array.from(new Set(baseItems));
 
       const container = document.getElementById("planMatrixRecListContainer");
@@ -13433,7 +14144,8 @@
 
       uniqueItems.forEach(sentence => {
         const bulletLine = `• ${sentence.replace(/^[•▸\-\s]+/, "")}`;
-        const isSelected = currentText.includes(sentence.replace(/^[•▸\-\s]+/, ""));
+        const cleanCore = sentence.replace(/^[•▸\-\s]+/, "");
+        const isSelected = currentText.includes(cleanCore.slice(0, 20));
 
         const btn = document.createElement("button");
         btn.type = "button";
@@ -13449,8 +14161,7 @@
             .split(/\r?\n/)
             .map(l => l.trim())
             .filter(Boolean);
-          const cleanCore = sentence.replace(/^[•▸\-\s]+/, "");
-          const existingIdx = lines.findIndex(l => l.includes(cleanCore));
+          const existingIdx = lines.findIndex(l => l.includes(cleanCore.slice(0, 20)));
           if (existingIdx >= 0) {
             lines.splice(existingIdx, 1);
           } else {
@@ -13471,30 +14182,26 @@
       });
     }
 
-    // [기능 1-B] 보고서 3-가. 활동 내용 구상표 추천 문장 선택기 렌더링
+    // [기능 1-B] 보고서 3-가. 활동 내용 구상표 추천 문장 선택기 렌더링 (테마 맞춤)
     function renderRepConceptRecommendationPicker() {
       ensureAutonomousDocState();
       const r = state.autonomousDocs.report;
       const meta = parseOverviewMetadata("report");
+      const themeObj = meta.themeObj;
       const container = document.getElementById("repConceptRecListContainer");
       if (!container) return;
       container.innerHTML = "";
 
-      const items = [...REPORT_CONCEPT_RECOMMENDATION_BANK];
-      const topStds = getRecommendedStandardsFromArchive(meta).slice(0, 6);
-      topStds.forEach((s, idx) => {
-        const cat = idx % 3 === 0 ? "내용이해" : (idx % 3 === 1 ? "의미탐구" : "감상표현");
-        items.unshift({
-          category: cat,
-          text: `▸ ${String(s.topic || s.text).replace(/\.$/, "")} (${s.code})`
-        });
-      });
+      const items = [];
+      (themeObj.knowledge || []).forEach(k => items.push({ category: "내용이해", text: `▸ ${k}` }));
+      (themeObj.process || []).forEach(p => items.push({ category: "의미탐구", text: `▸ ${p}` }));
+      (themeObj.values || []).forEach(v => items.push({ category: "감상표현", text: `▸ ${v}` }));
 
       const allCurrentText = (r.concepts || []).map(c => c.elements).join("\n");
 
       items.forEach(item => {
         const core = item.text.replace(/^[▸•\-\s]+/, "");
-        const isSelected = allCurrentText.includes(core);
+        const isSelected = allCurrentText.includes(core.slice(0, 20));
         const btn = document.createElement("button");
         btn.type = "button";
         btn.className = isSelected
@@ -13512,7 +14219,7 @@
             r.concepts.push(targetRow);
           }
           const lines = String(targetRow.elements || "").split(/\r?\n/).map(l => l.trim()).filter(Boolean);
-          const idx = lines.findIndex(l => l.includes(core));
+          const idx = lines.findIndex(l => l.includes(core.slice(0, 20)));
           if (idx >= 0) {
             lines.splice(idx, 1);
           } else {
@@ -13529,6 +14236,122 @@
           }
         });
         container.appendChild(btn);
+      });
+    }
+
+    // [신규 기능 4] 교육과정 제시 [평가 영역] 및 [평가 방법] 스크롤 선택 박스 렌더링
+    function renderEvalDomainAndMethodPicker(mode) {
+      ensureAutonomousDocState();
+      const isReport = mode === "report";
+      const prefix = isReport ? "rep" : "plan";
+      const doc = isReport ? state.autonomousDocs.report : state.autonomousDocs.plan;
+      const meta = parseOverviewMetadata(mode);
+
+      const rowSel = document.getElementById(`${prefix}EvalTargetRowSelect`);
+      const domainBox = document.getElementById(`${prefix}EvalDomainScrollBox`);
+      const methodBox = document.getElementById(`${prefix}EvalMethodScrollBox`);
+      if (!rowSel || !domainBox || !methodBox) return;
+
+      const evals = doc.evaluations || [];
+      const prevRowIdx = parseInt(rowSel.value, 10) || 0;
+      rowSel.innerHTML = "";
+      evals.forEach((ev, idx) => {
+        const opt = document.createElement("option");
+        opt.value = String(idx);
+        const label = isReport ? (ev.std || `평가 행 ${idx + 1}`).slice(0, 26) : `${idx + 1}행 · ${ev.subject || "교과"} (${ev.std || ""})`;
+        opt.textContent = label;
+        rowSel.appendChild(opt);
+      });
+      if (evals.length > 0) {
+        rowSel.value = String(Math.min(prevRowIdx, evals.length - 1));
+      }
+
+      const activeIdx = parseInt(rowSel.value, 10) || 0;
+      const targetEv = evals[activeIdx];
+      const currentMethodStr = targetEv ? String(targetEv.method || "") : "";
+
+      // 1) 교육과정 교과별 평가 영역 목록 구성 (현재 편성 교과 우선 배치)
+      const domainItems = [];
+      meta.subjects.forEach(subj => {
+        (CURRICULUM_EVAL_DOMAINS_BY_SUBJECT[subj] || []).forEach(d => domainItems.push(d));
+      });
+      (CURRICULUM_EVAL_DOMAINS_BY_SUBJECT["공통"] || []).forEach(d => domainItems.push(d));
+      Object.keys(CURRICULUM_EVAL_DOMAINS_BY_SUBJECT).forEach(subj => {
+        if (!meta.subjects.includes(subj) && subj !== "공통") {
+          (CURRICULUM_EVAL_DOMAINS_BY_SUBJECT[subj] || []).forEach(d => domainItems.push(d));
+        }
+      });
+
+      domainBox.innerHTML = "";
+      domainItems.forEach(domStr => {
+        const cleanDom = domStr.replace(/^\[[^\]]+\]\s*/, "");
+        const isSelected = currentMethodStr.includes(cleanDom.split(" (")[0]);
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = isSelected
+          ? "w-full text-left px-2 py-1 rounded border border-purple-500 bg-purple-50 text-purple-950 text-[11px] font-extrabold flex items-center justify-between"
+          : "w-full text-left px-2 py-1 rounded border border-slate-200 hover:border-purple-300 hover:bg-slate-50 text-slate-700 text-[11px] flex items-center justify-between";
+        btn.innerHTML = `<span>${domStr}</span><span class="text-[10px] font-bold ${isSelected ? 'text-purple-700' : 'text-slate-400'}">${isSelected ? '✓ 적용됨' : '선택'}</span>`;
+        btn.addEventListener("click", () => {
+          if (!targetEv) return;
+          const parts = String(targetEv.method || "").split("/").map(s => s.trim()).filter(Boolean);
+          if (parts.length >= 2) {
+            parts[0] = cleanDom;
+            targetEv.method = parts.join(" / ");
+          } else {
+            targetEv.method = `${cleanDom} / ${parts[0] || "관찰 평가 · 프로젝트 평가"}`;
+          }
+          saveStateToCache();
+          if (isReport) renderReportEditor();
+          else renderPlanEditor();
+          renderEvalDomainAndMethodPicker(mode);
+        });
+        domainBox.appendChild(btn);
+      });
+
+      // 2) 교육과정 제시 평가 방법 스크롤 목록 (복수 선택·해제 가능)
+      methodBox.innerHTML = "";
+      CURRICULUM_EVAL_METHODS_LIST.forEach(mStr => {
+        const shortM = mStr.split(" (")[0];
+        const isSelected = currentMethodStr.includes(shortM);
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = isSelected
+          ? "text-left px-2 py-1 rounded border border-indigo-500 bg-indigo-50 text-indigo-950 text-[11px] font-extrabold flex items-center justify-between"
+          : "text-left px-2 py-1 rounded border border-slate-200 hover:border-indigo-300 hover:bg-slate-50 text-slate-700 text-[11px] flex items-center justify-between";
+        btn.innerHTML = `<span class="truncate">${mStr}</span><span class="shrink-0 ml-1 text-[10px] font-bold ${isSelected ? 'text-indigo-700' : 'text-slate-400'}">${isSelected ? '✓' : '+'}</span>`;
+        btn.addEventListener("click", () => {
+          if (!targetEv) return;
+          if (isReport) {
+            const lines = String(targetEv.method || "").split(/\r?\n/).filter(Boolean);
+            const headerLine = `▪ [${shortM}]`;
+            if (targetEv.method.includes(shortM)) {
+              targetEv.method = targetEv.method.replace(shortM, "").replace(/\[\s*·?\s*\]/, "[관찰 평가]");
+            } else if (lines.length > 0 && lines[0].includes("[")) {
+              lines[0] = lines[0].replace(/\]/, ` · ${shortM}]`);
+              targetEv.method = lines.join("\n");
+            } else {
+              targetEv.method = `${headerLine}\n${targetEv.method}`;
+            }
+          } else {
+            const slashParts = String(targetEv.method || "").split("/");
+            const domainPart = slashParts.length >= 2 ? slashParts[0].trim() : (meta.themeObj.evalDomainDefault.split(" (")[0]);
+            const methodPart = slashParts.length >= 2 ? slashParts.slice(1).join("/").trim() : (slashParts[0] || "").trim();
+            let methodsArr = methodPart.split(/[,·]/).map(s => s.trim()).filter(Boolean);
+            if (methodsArr.some(x => x.includes(shortM))) {
+              methodsArr = methodsArr.filter(x => !x.includes(shortM));
+            } else {
+              methodsArr.push(shortM);
+            }
+            if (methodsArr.length === 0) methodsArr.push("관찰 평가");
+            targetEv.method = `${domainPart} / ${methodsArr.join(" · ")}`;
+          }
+          saveStateToCache();
+          if (isReport) renderReportEditor();
+          else renderPlanEditor();
+          renderEvalDomainAndMethodPicker(mode);
+        });
+        methodBox.appendChild(btn);
       });
     }
 
@@ -13563,7 +14386,6 @@
         subjSel.value = "RECOMMENDED";
       }
 
-      // 단원 드롭다운 갱신
       unitSel.innerHTML = '<option value="ALL">전체 단원·영역 보기</option>';
       if (subjSel.value !== "RECOMMENDED" && gradeDb[subjSel.value]) {
         (gradeDb[subjSel.value] || []).forEach((u, idx) => {
@@ -13679,7 +14501,7 @@
       });
     }
 
-    // [기능 3] 앞서 기입한 개관 + 내용체계표(구상표) + 성취기준 바탕으로 차시별 활동 전개 계획 자동 생성
+    // [기능 3 & 4] 앞서 기입한 개관 + 내용체계표(구상표) + 성취기준 바탕으로 차시별 활동 전개 계획 & 맞춤형 평가 계획 자동 생성
     function buildCandidateActivitiesFromInputs(mode) {
       ensureAutonomousDocState();
       const isReport = mode === "report";
@@ -13687,12 +14509,11 @@
       const meta = parseOverviewMetadata(mode);
 
       const actTitle = meta.activityName;
-      const matInfo = meta.materialInfo;
+      const matShort = meta.materialInfo.split(",")[0] || "교수학습 자료";
       const stds = (doc.standards && doc.standards.length > 0)
         ? doc.standards
         : getRecommendedStandardsFromArchive(meta).slice(0, 6);
 
-      // 내용체계표/구상표에 적힌 줄 추출
       let matrixBullets = [];
       if (isReport) {
         (doc.concepts || []).forEach(c => {
@@ -13711,64 +14532,116 @@
         pushLines(doc.matrixQuestions, "탐구 도입");
         pushLines(doc.matrixKnowledge, "지식·이해");
         pushLines(doc.matrixProcess, "과정·기능");
-        pushLines(doc.matrixValues, "가치·성찰");
+        pushLines(doc.matrixValues, "실천·성찰");
       }
 
-      // 성취기준 기반 활동 후보 생성
       const candidateBlocks = [];
-
-      // 1) 오리엔테이션·탐구 질문 열기 블록
       const firstStdCode = stds[0] ? stds[0].code : `[${meta.grade}자율-01]`;
+
       candidateBlocks.push({
         stage: isReport ? "준비하기" : "탐구 열기",
         std: firstStdCode,
-        page: isReport ? "교재·자료 탐색" : "",
-        method: isReport ? "질문·예측하기" : "",
-        topic: `${actTitle}배움 열기 및 탐구 질문 만들기`,
-        content: `• '${actTitle}' 프로젝트의 취지를 알아보고 핵심 탐구 질문 나누기\n• ${matInfo} 살펴보며 나의 학습 계획 세우기`
+        page: isReport ? matShort : "",
+        method: isReport ? "질문·탐색하기" : "",
+        topic: `${actTitle} 배움 열기 및 탐구 계획 세우기`,
+        content: `• '${actTitle}' 주제와 관련된 주변 사례를 살펴보고 핵심 탐구 질문 나누기\n• ${matShort} 활용 방법을 익히고 모둠별 탐구 계획 수립하기`
       });
 
-      // 2) 내용체계표(구상표) 항목들과 선택된 성취기준을 결합한 단계별 활동 블록
       const maxLen = Math.max(stds.length * 2, matrixBullets.length, meta.numBlocks - 2);
       for (let i = 0; i < maxLen; i++) {
         const sObj = stds[i % stds.length] || { code: firstStdCode, text: actTitle };
         const mObj = matrixBullets[i % Math.max(1, matrixBullets.length)];
         const coreStdPhrase = String(sObj.text || "")
           .replace(/\.$/, "")
-          .replace(/(쓴다|공유한다|기른다|탐색한다|이해한다|실천한다|표현한다|의사소통한다|제작한다|분석한다|설명한다)$/, "기");
+          .replace(/(쓴다|공유한다|기른다|탐색한다|이해한다|실천한다|표현한다|의사소통한다|제작한다|분석한다|설명한다|관찰한다|조사한다)$/, "기");
 
-        const stageName = mObj ? mObj.stage : (i < maxLen / 3 ? "이해·탐구" : (i < (maxLen * 2) / 3 ? "실습·창작" : "공유·확장"));
+        const stageName = mObj ? mObj.stage : (i < maxLen / 3 ? "이해·탐구" : (i < (maxLen * 2) / 3 ? "과정·실습" : "표현·실천"));
         const topicTitle = mObj
-          ? mObj.text.slice(0, 32)
+          ? mObj.text.replace(/\([0-9가-힣\[\]\-]+\)/g, "").trim().slice(0, 32)
           : `${coreStdPhrase.slice(0, 28)} 활동`;
 
-        const detailLine1 = mObj
-          ? `• ${mObj.text}`
-          : `• ${coreStdPhrase}`;
-        const detailLine2 = `• [${sObj.code}] 성취기준과 연계하여 ${matInfo.slice(0, 28)} 기반 모둠·개별 탐구 수행하기`;
+        const detailLine1 = mObj ? `• ${mObj.text}` : `• ${coreStdPhrase}`;
+        const detailLine2 = `• ${sObj.code} 성취기준과 연계하여 ${matShort} 기반 모둠·개별 탐구 및 기록 활동 수행하기`;
 
         candidateBlocks.push({
           stage: stageName,
           std: sObj.code,
-          page: isReport ? (i % 2 === 0 ? "탐구 활동지" : "에듀테크·실습") : "",
-          method: isReport ? (i % 2 === 0 ? "토의·탐구" : "표현·글쓰기") : "",
+          page: isReport ? matShort : "",
+          method: isReport ? (i % 2 === 0 ? "관찰·탐구" : "토의·표현") : "",
           topic: topicTitle,
           content: `${detailLine1}\n${detailLine2}`
         });
       }
 
-      // 3) 마무리 발표·공론장 및 성찰 블록
       const lastStdCode = stds[stds.length - 1] ? stds[stds.length - 1].code : firstStdCode;
       candidateBlocks.push({
-        stage: isReport ? "공존하기" : "발표·성찰",
+        stage: isReport ? "공유·성찰" : "발표·성찰",
         std: lastStdCode,
-        page: isReport ? "학급 공유회" : "",
+        page: isReport ? "학급 나눔 발표회" : "",
         method: isReport ? "발표·성찰" : "",
-        topic: `${actTitle} 산출물 공유 박람회 및 성장 성찰`,
-        content: `• 완성한 '${actTitle}' 결과물을 친구들과 공유하고 상호 피드백 나누기\n• 활동을 통해 배운 점과 실생활 실천 다짐문 작성하기`
+        topic: `${actTitle} 산출물 발표회 및 생활 속 실천 다짐`,
+        content: `• 완성한 '${actTitle}' 탐구 결과물과 캠페인 자료를 발표하고 상호 피드백 나누기\n• 활동을 통해 배운 가치를 돌아보며 일상생활 속 실천 다짐문 작성하기`
       });
 
       return candidateBlocks;
+    }
+
+    function generateEvaluationsFromDesign(mode) {
+      ensureAutonomousDocState();
+      const isReport = mode === "report";
+      const doc = isReport ? state.autonomousDocs.report : state.autonomousDocs.plan;
+      const meta = parseOverviewMetadata(mode);
+      const themeObj = meta.themeObj;
+      const stds = (doc.standards && doc.standards.length > 0)
+        ? doc.standards
+        : getRecommendedStandardsFromArchive(meta).slice(0, 3);
+
+      // 교과별로 대표 성취기준을 묶어 맞춤형 평가 계획 생성
+      const bySubject = {};
+      stds.forEach(s => {
+        const subj = s.domain || meta.subjects[0] || "통합";
+        if (!bySubject[subj]) bySubject[subj] = [];
+        bySubject[subj].push(s);
+      });
+
+      const subjKeys = Object.keys(bySubject);
+      if (isReport) {
+        doc.evaluations = subjKeys.slice(0, 3).map((subj, idx) => {
+          const sList = bySubject[subj];
+          const primaryStd = sList[0];
+          const stdClean = String(primaryStd.text || "").replace(/\.$/, "");
+          const domList = CURRICULUM_EVAL_DOMAINS_BY_SUBJECT[subj] || CURRICULUM_EVAL_DOMAINS_BY_SUBJECT["공통"];
+          const chosenDom = (domList[0] || "").replace(/^\[[^\]]+\]\s*/, "");
+          const chosenMethod = idx === 0 ? "관찰 평가 · 탐구·조사 보고서 평가" : "프로젝트 평가 · 산출물 발표 평가";
+
+          return {
+            std: `${primaryStd.code} ${primaryStd.text}`,
+            element: `▪ [${chosenDom}] '${meta.activityName}' 연계 ${stdClean}`,
+            method: `▪ [${chosenMethod}]\n▪ ${meta.materialInfo.split(",")[0]}을(를) 활용하여 ${stdClean} 과정을 수행하고 모둠·학급에서 결과를 공유한다.`,
+            criteria: `[${chosenMethod.split(" · ")[0]}]\n▪ (매우잘함) ${stdClean}의 원리와 가치를 깊이 이해하고 주도적으로 탐구·실천하여 완성도 높은 결과물을 발표할 수 있다.\n▪ (잘함) ${stdClean} 활동에 성실히 참여하여 탐구 결과를 정리하고 발표할 수 있다.\n▪ (보통) 교사와 친구의 도움을 받아 기본적인 활동 과제를 수행할 수 있다.`,
+            period: idx === 0 ? "5~6월" : "6~7월"
+          };
+        });
+      } else {
+        doc.evaluations = subjKeys.slice(0, 3).map((subj, idx) => {
+          const sList = bySubject[subj];
+          const primaryStd = sList[0];
+          const codeJoined = sList.slice(0, 2).map(x => x.code).join(", ");
+          const stdClean = String(primaryStd.text || "").replace(/\.$/, "");
+          const domList = CURRICULUM_EVAL_DOMAINS_BY_SUBJECT[subj] || CURRICULUM_EVAL_DOMAINS_BY_SUBJECT["공통"];
+          const chosenDom = (domList[0] || themeObj.evalDomainDefault).replace(/^\[[^\]]+\]\s*/, "");
+          const chosenMethod = idx === 0 ? "관찰 평가 · 탐구·조사 보고서 평가" : "프로젝트 평가 · 산출물(캠페인·매체) 평가";
+
+          return {
+            subject: subj,
+            std: codeJoined,
+            element: `[${meta.activityName}] ${stdClean}`,
+            method: `${chosenDom} / ${chosenMethod}`,
+            criteria: `• (탁월/매우잘함) ${stdClean}의 핵심 개념과 가치를 명확히 이해하고, ${meta.materialInfo.split(",")[0]}을(를) 활용해 깊이 있는 탐구 및 실천 결과물을 제작·공유함.\n• (숙달/잘함) ${stdClean} 활동에 적극적으로 참여하여 탐구 과제를 수행하고 결과물을 표현함.\n• (기본/보통) 안내된 절차에 따라 기본적인 관찰·탐구 및 표현 활동에 참여함.`,
+            period: idx === 0 ? "5월" : "6~7월"
+          };
+        });
+      }
     }
 
     function synthesizeLessonPlanFromEarlierInputs(mode, showToastMsg = true) {
@@ -13792,8 +14665,8 @@
           newLessons.push({
             stage: cand.stage,
             chasi: chasiLabel,
-            page: cand.page || "활동 자료",
-            method: cand.method || "탐구·표현",
+            page: cand.page || "탐구 자료",
+            method: cand.method || "관찰·탐구",
             content: cand.content
           });
         } else {
@@ -13808,39 +14681,16 @@
       }
 
       doc.lessons = newLessons;
-
-      // 평가 계획도 현재 성취기준과 활동명에 맞춰 자동 보완 (비어 있거나 자동 동기화 시)
-      if (!doc.evaluations || doc.evaluations.length === 0 || showToastMsg) {
-        const firstStd = (doc.standards && doc.standards[0]) || { domain: meta.subjects[0] || "국어", code: `[${meta.grade}자율-01]`, text: `${meta.activityName} 성취기준` };
-        if (isReport) {
-          doc.evaluations = [
-            {
-              std: `${firstStd.code} ${firstStd.text}`,
-              element: `▪ '${meta.activityName}' 핵심 주제 탐구 및 산출물 표현·발표하기`,
-              method: `▪ [과정 중심 수업 및 프로젝트]\n▪ ${meta.materialInfo}을(를) 활용하여 탐구·표현 과정을 수행하고 친구들과 공유한다.`,
-              criteria: `[프로젝트·관찰]\n▪ '${meta.activityName}'의 핵심 원리를 이해하고 자신의 생각과 산출물을 창의적으로 표현할 수 있다.`,
-              period: "학기 중(6~7월)"
-            }
-          ];
-        } else {
-          doc.evaluations = (doc.standards || [firstStd]).slice(0, 2).map(s => ({
-            subject: s.domain || meta.subjects[0] || "통합",
-            std: s.code,
-            element: `'${meta.activityName}' 연계 ${String(s.text).replace(/\.$/, "")}`,
-            method: "과정 중심 관찰평가 · 프로젝트 및 서술형 평가 (개별/동료)",
-            criteria: `• (탁월/매우잘함) ${String(s.text).replace(/\.$/, "")} 과정을 주도적으로 수행하고 깊이 있는 결과물을 완성하여 공유함.\n• (숙달/잘함) ${String(s.text).replace(/\.$/, "")} 활동에 성실히 참여하여 목표한 결과물을 완성함.\n• (기본/보통) 교사와 친구의 도움을 받아 기본적인 활동 과제를 수행함.`,
-            period: "6~7월"
-          }));
-        }
-      }
+      generateEvaluationsFromDesign(mode);
 
       saveStateToCache();
       if (isReport) renderReportEditor();
       else renderPlanEditor();
       renderRecommendedLessonsPicker(mode);
+      renderEvalDomainAndMethodPicker(mode);
 
       if (showToastMsg) {
-        showToast(`앞서 기입한 개관(${meta.grade}학년·${meta.totalHours}시간)·내용체계·성취기준을 바탕으로 ${numBlocks}개 차시 계획이 자동 입력되었습니다!`, "success");
+        showToast(`앞서 기입한 개관(${meta.grade}학년·${meta.totalHours}시간)·내용체계·성취기준을 바탕으로 차시 계획과 평가 계획이 자동 갱신되었습니다!`, "success");
       }
     }
 
@@ -13860,7 +14710,7 @@
       if (!listEl) return;
       listEl.innerHTML = "";
 
-      candidates.slice(0, 12).forEach((cand, idx) => {
+      candidates.slice(0, 12).forEach((cand) => {
         const btn = document.createElement("button");
         btn.type = "button";
         btn.className = "text-left p-2 rounded-lg border border-slate-200 hover:border-purple-400 hover:bg-purple-50/40 text-xs flex items-start justify-between gap-2 transition";
@@ -13904,21 +14754,35 @@
       });
     }
 
-    // 개관 바탕으로 전체(내용체계표 + 성취기준 + 활동 전개 계획 + 평가 계획) 원클릭 자동 구성
-    function synthesizeAllFromOverview(mode) {
+    // 개관 바탕으로 전체(필요성·목표 + 적합한 교수학습자료 + 내용체계표 + 성취기준 + 활동 전개 계획 + 평가 계획) 원클릭 자동 구성
+    function synthesizeAllFromOverview(mode, showToastNotification = true) {
       ensureAutonomousDocState();
       const isReport = mode === "report";
       const doc = isReport ? state.autonomousDocs.report : state.autonomousDocs.plan;
       const meta = parseOverviewMetadata(mode);
+      const themeObj = meta.themeObj;
 
-      // 1) 학년 드롭다운 동기화
+      // 1) 학년 드롭다운 및 편제표 학년군 자동 동기화
       const gradeSel = document.getElementById(isReport ? "repArchiveGradeSelect" : "planArchiveGradeSelect");
       if (gradeSel) {
         gradeSel.value = String(meta.grade);
         populateArchiveSubjectAndUnitSelects(mode);
       }
+      if (!isReport) {
+        doc.scheduleCluster = meta.grade <= 4 ? "34" : "56";
+      }
 
-      // 2) 아카이브에서 개관 맞춤 상위 성취기준 4~6개 자동 추출
+      // 2) 교수학습자료가 이전 프리셋('자작자작' 등)으로 남아 있거나 테마와 맞지 않으면 테마 맞춤 교수학습자료로 자동 교체!
+      if (meta.themeKey !== "ai_media_democracy" && meta.themeKey !== "reading_humanities") {
+        if (/자작자작|AI\s*글쓰기|불량한\s*자전거/.test(doc.materialDesc || "")) {
+          doc.materialDesc = themeObj.materials[0];
+        }
+        if (/불량한\s*자전거|도서명\s*입력/.test(doc.bookName || "")) {
+          doc.bookName = themeObj.defaultBook;
+        }
+      }
+
+      // 3) 아카이브에서 개관 맞춤 상위 성취기준 자동 추출
       const recStds = getRecommendedStandardsFromArchive(meta).slice(0, 5);
       if (recStds.length > 0) {
         if (isReport) {
@@ -13928,38 +14792,71 @@
         }
       }
 
-      // 3) 내용체계표 / 구상표 자동 보강
+      // 4) [핵심 수정 1, 2, 3] 활동의 설계 (필요성·목표 + 테마 맞춤 내용체계표 + 구체적인 가치·태도) 전면 갱신!
       if (isReport) {
-        doc.designActivityTitle = `${meta.activityName} 프로젝트`;
-        doc.purposeNarrative = `본 학교자율시간 활동('${meta.activityName}')은 ${meta.grade}학년 ${meta.subjects.join("·")} 교과를 연계하여 총 ${meta.totalHours}시간 동안 운영되었다. ${doc.needSchool || ""} ${doc.needStudent || ""} 이를 위해 ${meta.materialInfo}을(를) 활용하여 학생들이 삶과 연결된 깊이 있는 탐구와 자기주도적 표현을 경험하도록 설계하였다.`.trim();
+        doc.designActivityTitle = `${meta.activityName}`;
+        doc.purposeNarrative = `본 학교자율시간 활동('${meta.activityName}')은 ${meta.grade}학년 ${meta.subjects.join("·")} 교과를 유기적으로 연계하여 총 ${meta.totalHours}시간 동안 운영되었다. ${doc.needSchool || themeObj.necessities[0].replace(/^[0-9)\s]+/, "")} ${doc.needStudent || themeObj.necessities[1].replace(/^[0-9)\s]+/, "")} 이를 위해 ${doc.materialDesc || themeObj.materials[0]}을(를) 활용하여 학생들이 삶과 연결된 깊이 있는 탐구와 실천을 경험하도록 설계하였다.`.trim();
+        doc.referenceMaterials = `1. ${doc.bookName || themeObj.defaultBook}  /  2. ${doc.materialDesc || themeObj.materials[0]}`;
         doc.concepts = [
           {
             category: "내용이해",
-            elements: recStds.slice(0, 2).map(s => `▸ ${String(s.topic || s.text).replace(/\.$/, "")} (${s.code})`).join("\n") || "▸ 핵심 개념과 원리 이해하기"
+            elements: (themeObj.knowledge || []).slice(0, 3).map(k => `▸ ${k}`).join("\n")
           },
           {
             category: "의미탐구",
-            elements: `▸ '${meta.activityName}' 관련 실생활 사례 조사 및 모둠 토의하기\n` + (recStds[2] ? `▸ ${String(recStds[2].topic || recStds[2].text).replace(/\.$/, "")} (${recStds[2].code})` : "▸ 다양한 관점에서 문제를 분석하고 해결 방안 탐색하기")
+            elements: (themeObj.process || []).slice(0, 3).map(p => `▸ ${p}`).join("\n")
           },
           {
-            category: "감상표현",
-            elements: `▸ ${meta.materialInfo}을(를) 활용하여 나만의 산출물 창작·고쳐쓰기\n▸ 친구들과 결과물을 공유하고 상호 피드백을 나누며 삶에 적용하기`
+            category: "감상표현·실천",
+            elements: (themeObj.values || []).slice(0, 3).map(v => `▸ ${v}`).join("\n")
           }
         ];
       } else {
-        doc.matrixDomain = `${meta.activityName} (${meta.subjects.join("·")} 통합)`;
-        doc.matrixQuestions = `• '${meta.activityName}' 활동을 통해 우리가 발견하고 해결할 수 있는 삶의 문제는 무엇일까?\n• ${meta.materialInfo}을(를) 활용하여 나의 생각과 탐구 결과를 효과적으로 표현하는 방법은 무엇일까?`;
-        doc.matrixKnowledge = recStds.slice(0, 3).map(s => `• [${s.domain}] ${String(s.topic || s.text).replace(/\.$/, "")}`).join("\n");
-        doc.matrixProcess = `• '${meta.activityName}' 주제와 관련된 자료를 수집·분석하고 모둠별로 토의하기\n• ${meta.materialInfo}을(를) 활용하여 초안을 설계하고 피드백을 반영해 산출물 완성하기\n• 완성된 결과물을 학급 공론장에서 발표하고 공유하기`;
-        doc.matrixValues = `• 배움의 주체로서 호기심을 가지고 적극적으로 탐구하려는 자기주도적 태도\n• 친구들의 다양한 의견을 존중하고 협력하여 문제를 해결하는 공동체 의식\n• 배운 내용을 일상생활 속에서 꾸준히 실천하려는 책임감`;
+        // 2-가. 활동 개설의 필요성 & 2-나. 활동 목표를 테마 및 설계 의도에 맞게 자동 갱신
+        doc.necessityList = (themeObj.necessities || []).slice(0, 3).join("\n");
+        doc.goalList = (themeObj.goals || []).slice(0, 3).join("\n");
+
+        // 3-가. 내용체계표 (탐구질문 / 지식·이해 / 과정·기능 / 가치·태도)를 테마 전용 DB와 성취기준으로 구성
+        doc.matrixDomain = `${meta.activityName} (${meta.grade}학년 ${meta.subjects.join("·")} 융합 · ${themeObj.label})`;
+        doc.matrixQuestions = (themeObj.questions || []).slice(0, 2).map(q => `• ${q}`).join("\n");
+        doc.matrixKnowledge = [
+          ...(themeObj.knowledge || []).slice(0, 2).map(k => `• ${k}`),
+          ...recStds.slice(0, 2).map(s => `• [${s.domain}] ${String(s.topic || s.text).replace(/\.$/, "")} (${s.code})`)
+        ].join("\n");
+        doc.matrixProcess = (themeObj.process || []).slice(0, 4).map(p => `• ${p}`).join("\n");
+        // 3) 가치·태도: 일반론적 문장 대신 해당 테마(생태·지역·독서·AI 등)의 구체적인 가치·태도 문장으로 설정!
+        doc.matrixValues = (themeObj.values || []).slice(0, 4).map(v => `• ${v}`).join("\n");
       }
 
-      // 4) 차시별 활동 전개 계획 & 평가 계획 자동 생성
+      // 5) 차시별 활동 전개 계획 & 맞춤형 평가 계획 자동 생성
       synthesizeLessonPlanFromEarlierInputs(mode, false);
+
+      // DOM 강제 반영 (사용자가 개관 입력 중이어도 하위 설계 필드들이 즉시 눈에 보이게 갱신!)
+      if (!isReport) {
+        const forceIds = {
+          planMaterialDesc: doc.materialDesc,
+          planBookName: doc.bookName,
+          planNecessityList: doc.necessityList,
+          planGoalList: doc.goalList,
+          planMatrixDomain: doc.matrixDomain,
+          planMatrixQuestions: doc.matrixQuestions,
+          planMatrixKnowledge: doc.matrixKnowledge,
+          planMatrixProcess: doc.matrixProcess,
+          planMatrixValues: doc.matrixValues
+        };
+        Object.keys(forceIds).forEach(id => {
+          const el = document.getElementById(id);
+          if (el && document.activeElement !== el) {
+            el.value = forceIds[id] || "";
+          }
+        });
+      }
 
       updateLiveOverviewBanner(mode);
       renderAutonomousSubTabsAndDocs();
-      showToast(`입력하신 [활동의 개관]을 실시간 분석하여 ${meta.grade}학년 ${meta.subjects.join("·")} 성취기준(${recStds.length}개), 내용체계표, ${meta.totalHours}시간 활동 전개 계획을 모두 자동 구성했습니다!`, "success");
+      if (showToastNotification) {
+        showToast(`[${themeObj.label}] 설계에 맞추어 필요성·목표, 교수학습자료, 내용체계표(가치·태도), 성취기준, 차시 계획, 평가 계획이 모두 업데이트되었습니다!`, "success");
+      }
     }
 
     function bindSmartAutonomyEvents() {
@@ -13971,6 +14868,38 @@
           renderPlanMatrixRecommendationPicker();
         });
       });
+
+      // 평가 계획 대상 행 드롭다운 변경 시 스크롤 박스 하이라이트 갱신
+      const pEvalRowSel = document.getElementById("planEvalTargetRowSelect");
+      if (pEvalRowSel) {
+        pEvalRowSel.addEventListener("change", () => renderEvalDomainAndMethodPicker("plan"));
+      }
+      const rEvalRowSel = document.getElementById("repEvalTargetRowSelect");
+      if (rEvalRowSel) {
+        rEvalRowSel.addEventListener("change", () => renderEvalDomainAndMethodPicker("report"));
+      }
+
+      // 평가 계획 자동 갱신 버튼
+      const btnGenPEval = document.getElementById("btnAutoGeneratePlanEvals");
+      if (btnGenPEval) {
+        btnGenPEval.addEventListener("click", () => {
+          generateEvaluationsFromDesign("plan");
+          saveStateToCache();
+          renderPlanEditor();
+          renderEvalDomainAndMethodPicker("plan");
+          showToast("활동 설계와 성취기준에 맞추어 평가 계획이 자동 갱신되었습니다!", "success");
+        });
+      }
+      const btnGenREval = document.getElementById("btnAutoGenerateRepEvals");
+      if (btnGenREval) {
+        btnGenREval.addEventListener("click", () => {
+          generateEvaluationsFromDesign("report");
+          saveStateToCache();
+          renderReportEditor();
+          renderEvalDomainAndMethodPicker("report");
+          showToast("활동 설계와 성취기준에 맞추어 평가 계획이 자동 갱신되었습니다!", "success");
+        });
+      }
 
       // 성취기준 아카이브 드롭다운·검색 이벤트 (계획서 & 보고서 공통)
       ["plan", "rep"].forEach(prefix => {
@@ -14011,7 +14940,7 @@
           renderPlanEditor();
           renderArchiveStandardPicker("plan");
           synthesizeLessonPlanFromEarlierInputs("plan", false);
-          showToast(`활동 개관에 맞는 ${meta.grade}학년 추천 성취기준 ${rec.length}개를 담고 차시 계획을 연동했습니다!`, "success");
+          showToast(`활동 개관에 맞는 ${meta.grade}학년 추천 성취기준 ${rec.length}개를 담고 차시·평가 계획을 연동했습니다!`, "success");
         });
       }
 
@@ -14025,7 +14954,7 @@
           renderReportEditor();
           renderArchiveStandardPicker("report");
           synthesizeLessonPlanFromEarlierInputs("report", false);
-          showToast(`활동 개관에 맞는 ${meta.grade}학년 추천 성취기준 ${rec.length}개를 담고 차시 계획을 연동했습니다!`, "success");
+          showToast(`활동 개관에 맞는 ${meta.grade}학년 추천 성취기준 ${rec.length}개를 담고 차시·평가 계획을 연동했습니다!`, "success");
         });
       }
 
@@ -14042,18 +14971,18 @@
       // 개관 바탕 전체 자동 채우기 버튼
       const btnSynthPlan = document.getElementById("btnPlanSynthesizeAllFromOverview");
       if (btnSynthPlan) {
-        btnSynthPlan.addEventListener("click", () => synthesizeAllFromOverview("plan"));
+        btnSynthPlan.addEventListener("click", () => synthesizeAllFromOverview("plan", true));
       }
       const btnSynthRep = document.getElementById("btnRepSynthesizeAllFromOverview");
       if (btnSynthRep) {
-        btnSynthRep.addEventListener("click", () => synthesizeAllFromOverview("report"));
+        btnSynthRep.addEventListener("click", () => synthesizeAllFromOverview("report", true));
       }
 
-      // 개관 입력 필드 수정 시 실시간 감지 & 자동 연동 (디바운스 적용)
+      // 개관 입력 필드 수정 시 실시간 감지 & 하위 설계(필요성·목표·자료·내용체계·성취기준·차시·평가) 자동 연동!
       let planDebounce = null;
       [
         "planActivityName", "planGradeText", "planSubjectsText", "planHoursTotal",
-        "planBookName", "planMaterialDesc", "planDesignIntent", "planNecessityList", "planGoalList"
+        "planDesignIntent"
       ].forEach(id => {
         const el = document.getElementById(id);
         if (el) {
@@ -14065,6 +14994,7 @@
               gSel.value = String(meta.grade);
               populateArchiveSubjectAndUnitSelects("plan");
             }
+            renderPlanNecessityAndGoalPickers();
             renderPlanMatrixRecommendationPicker();
             renderArchiveStandardPicker("plan");
             renderRecommendedLessonsPicker("plan");
@@ -14073,8 +15003,8 @@
             if (autoToggle && autoToggle.checked) {
               clearTimeout(planDebounce);
               planDebounce = setTimeout(() => {
-                synthesizeAllFromOverview("plan");
-              }, 650);
+                synthesizeAllFromOverview("plan", false);
+              }, 500);
             }
           });
         }
@@ -14083,7 +15013,7 @@
       let repDebounce = null;
       [
         "repActivityName", "repTargetGradeSem", "repTargetHours",
-        "repBookName", "repMaterialDesc", "repNeedSchool", "repNeedStudent", "repDesignActivityTitle", "repPurposeNarrative"
+        "repNeedSchool", "repNeedStudent"
       ].forEach(id => {
         const el = document.getElementById(id);
         if (el) {
@@ -14103,8 +15033,8 @@
             if (autoToggle && autoToggle.checked) {
               clearTimeout(repDebounce);
               repDebounce = setTimeout(() => {
-                synthesizeAllFromOverview("report");
-              }, 650);
+                synthesizeAllFromOverview("report", false);
+              }, 500);
             }
           });
         }
@@ -14140,8 +15070,11 @@
       renderReportEditor();
       updateLiveOverviewBanner("plan");
       updateLiveOverviewBanner("report");
+      renderPlanNecessityAndGoalPickers();
       renderPlanMatrixRecommendationPicker();
       renderRepConceptRecommendationPicker();
+      renderEvalDomainAndMethodPicker("plan");
+      renderEvalDomainAndMethodPicker("report");
       renderArchiveStandardPicker("plan");
       renderArchiveStandardPicker("report");
       renderRecommendedLessonsPicker("plan");
@@ -15771,6 +16704,14 @@
           }
         });
       });
+
+      // 행동특성 탭: 학년 맞춤 활동 추천 버튼
+      const btnRecBehGrade = document.getElementById("btnRecommendGradeBehaviorActs");
+      if (btnRecBehGrade) {
+        btnRecBehGrade.addEventListener("click", () => {
+          applyGradeRecommendedBehaviorActivities(state.behaviorGrade || 6, true);
+        });
+      }
 
       // 행동특성 탭: 학기 표기 버튼
       document.querySelectorAll(".sem-btn").forEach(btn => {
