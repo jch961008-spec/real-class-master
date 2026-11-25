@@ -461,10 +461,27 @@
 
           <!-- 단원 선택 드롭다운 -->
           <div class="space-y-2">
-            <label for="unitSelect" class="block text-xs font-extrabold text-slate-700">
-              1단계. 단원(영역) 선택
-            </label>
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <label for="unitSelect" class="block text-xs font-extrabold text-slate-700">
+                1단계. 단원(영역) 선택 (단원을 옮겨 다녀도 담은 성취기준이 그대로 유지됩니다)
+              </label>
+              <span class="text-[11px] font-bold text-blue-700">여러 단원에서 원하는 성취기준을 중복 선택할 수 있습니다</span>
+            </div>
             <select id="unitSelect" class="w-full h-11 px-3.5 rounded-xl border border-slate-300 text-xs font-bold text-slate-800 bg-slate-50 focus:bg-white focus:border-blue-600 focus:outline-none"></select>
+          </div>
+
+          <!-- 내가 담은 성취기준 바구니 (여러 단원 누적 선택 확인 및 개별 삭제) -->
+          <div id="selectedStandardsBasketCard" class="rounded-xl border border-blue-200 bg-blue-50/60 p-4 space-y-2.5">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="px-2.5 py-0.5 rounded-lg bg-blue-600 text-white text-[11px] font-extrabold">담은 성취기준 바구니</span>
+                <span id="selectedBasketSummary" class="text-xs font-extrabold text-blue-950">0개 단원 · 0개 성취기준 선택됨</span>
+              </div>
+              <button id="btnClearStandardBasket" type="button" class="text-xs font-extrabold text-rose-600 hover:underline">
+                바구니 비우기
+              </button>
+            </div>
+            <div id="selectedStandardsBasketList" class="flex flex-wrap gap-1.5 max-h-36 overflow-y-auto custom-scroll"></div>
           </div>
 
           <!-- 성취기준 체크 리스트 + 실시간 검색 필터 -->
@@ -10722,86 +10739,18 @@
 };
 
     const SUBJECT_TRAIT_CHIPS = [
-  {
-    id: "active_talk",
-    "label": "🙋 발표·질문 적극",
-    "phrase": "호기심을 가지고 적극적으로 질문하며 자신의 생각을 또렷하게 발표하고,"
-  },
-  {
-    id: "coop_group",
-    "label": "🤝 모둠 협력·배려",
-    "phrase": "모둠 활동에서 친구의 의견을 경청하고 맡은 역할을 책임감 있게 수행하며,"
-  },
-  {
-    id: "self_directed",
-    "label": "📘 자기주도 복습·탐구",
-    "phrase": "배운 내용을 스스로 정리하고 심화 과제를 찾아 해결하는 자기 주도성을 발휘하며,"
-  },
-  {
-    id: "creative_idea",
-    "label": "💡 창의적 문제해결",
-    "phrase": "다양한 관점에서 해결 방법을 모색하고 독창적인 아이디어를 제시하며,"
-  },
-  {
-    id: "steady_effort",
-    "label": "🌱 성실·끈기 완수",
-    "phrase": "어려운 과제도 포기하지 않고 끝까지 완수하려는 끈기와 성실함을 보이며,"
-  },
-  {
-    id: "digital_tool",
-    "label": "💻 에듀테크·매체 활용",
-    "phrase": "디지털 학습 도구와 시각 자료를 효과적으로 활용하여 탐구 결과를 정리하며,"
-  },
-  {
-    id: "real_life",
-    "label": "🏡 실생활 연결·적용",
-    "phrase": "교과서에서 배운 원리를 일상생활 속 경험과 자연스럽게 연결하여 실천하며,"
-  },
-  {
-    id: "note_organize",
-    "label": "✏️ 배움공책·기록 우수",
-    "phrase": "수업 시간마다 핵심 내용을 배움 공책에 체계적이고 꼼꼼하게 기록하며,"
-  },
-  {
-    id: "inquiry_exp",
-    "label": "🔬 실험·관찰 설계",
-    "phrase": "실험과 관찰 절차에 따라 변인을 세심하게 살피고 탐구 결과를 논리적으로 도출하며,"
-  },
-  {
-    id: "math_reasoning",
-    "label": "📐 수리·논리적 추론",
-    "phrase": "구체물 조작과 그림·식을 활용하여 문제 해결 과정을 논리적으로 추론하며,"
-  },
-  {
-    id: "art_sensibility",
-    "label": "🎨 심미적 감성·표현",
-    "phrase": "풍부한 감수성과 상상력을 바탕으로 자신의 느낌과 생각을 독창적으로 표현하며,"
-  },
-  {
-    id: "eco_action",
-    "label": "🌿 생태감수성·환경실천",
-    "phrase": "인간과 자연의 공존 가치를 깊이 인식하고 일상 속 생태 전환 행동을 솔선하여 실천하며,"
-  },
-  {
-    id: "media_literacy",
-    "label": "📰 비판적 읽기·매체비평",
-    "phrase": "다양한 글과 매체 자료의 신뢰성과 타당성을 비판적으로 검토하며 읽고,"
-  },
-  {
-    id: "empathy_listen",
-    "label": "💬 공감적 경청·토의",
-    "phrase": "토의·토론 과정에서 상대방의 입장을 존중하고 합리적인 대안을 이끌어 내며,"
-  },
-  {
-    id: "peer_mentoring",
-    "label": "🌟 또래 배움 나눔",
-    "phrase": "어려움을 겪는 모둠 친구에게 풀이 과정과 원리를 친절하게 설명해 주며 함께 성장하고,"
-  },
-  {
-    id: "problem_making",
-    "label": "🧩 문제 만들기·응용",
-    "phrase": "핵심 원리를 바탕으로 새로운 문제를 직접 만들고 변형하여 해결해 보며,"
-  }
+  { id: "active_talk", label: "🙋 발표·질문 적극", phrase: "궁금한 점을 질문하고 자신의 생각을 또렷하게 발표함." },
+  { id: "coop_group", label: "🤝 모둠 협력·배려", phrase: "모둠 활동에서 친구의 의견을 경청하고 맡은 역할을 성실히 수행함." },
+  { id: "self_directed", label: "📘 자기주도 복습·탐구", phrase: "배운 내용을 스스로 정리하고 부족한 부분을 차분히 확인함." },
+  { id: "creative_idea", label: "💡 창의적 문제해결", phrase: "여러 방법을 시도하며 자신만의 생각으로 문제를 해결함." },
+  { id: "steady_effort", label: "🌱 성실·끈기 완수", phrase: "어려운 과제도 포기하지 않고 끝까지 차분하게 마무리함." },
+  { id: "digital_tool", label: "💻 디지털·매체 활용", phrase: "디지털 기기와 학습 자료를 알맞게 활용해 결과를 정리함." },
+  { id: "careful_record", label: "✍️ 꼼꼼한 관찰·기록", phrase: "학습 과정에서 관찰한 내용과 생각을 꼼꼼하게 기록함." },
+  { id: "peer_help", label: "💛 친구 돕기·나눔", phrase: "이해한 내용을 친구에게 친절하게 설명하며 함께 배움을 나눔." },
+  { id: "real_life", label: "🌍 실생활 연계 적용", phrase: "수업에서 배운 내용을 일상생활의 사례와 잘 연결하여 이해함." },
+  { id: "good_attitude", label: "🪑 바른 경청·수업태도", phrase: "바른 자세로 설명을 경청하고 수업 약속을 잘 지킴." },
+  { id: "confident_try", label: "🔥 자신감 있는 도전", phrase: "새로운 활동에도 주저하지 않고 적극적으로 참여함." },
+  { id: "logical_think", label: "🧩 논리적 근거 표현", phrase: "알맞은 근거를 들어 자신의 생각을 조리 있게 설명함." }
 ];
 
     const CORE_COMPETENCIES = [
@@ -11633,7 +11582,7 @@
 
     function saveStateToCache() {
       try {
-        localStorage.setItem("elem_student_record_2026_v9", JSON.stringify(state));
+        localStorage.setItem("elem_student_record_2026_v10", JSON.stringify(state));
         const badge = document.getElementById("cacheStatusBadge");
         if (badge) {
           badge.textContent = "💾 자동저장됨";
@@ -11645,7 +11594,7 @@
 
     function loadStateFromCache() {
       try {
-        const raw = localStorage.getItem("elem_student_record_2026_v9");
+        const raw = localStorage.getItem("elem_student_record_2026_v10");
         if (raw) {
           const parsed = JSON.parse(raw);
           state = Object.assign({}, JSON.parse(JSON.stringify(DEFAULT_STATE)), parsed);
@@ -11682,6 +11631,17 @@
       return `${word}${chosen}`;
     }
 
+    // 한글 종성(받침)이 'ㅁ'(16) 또는 'ㄻ'(10)인지 판별 (명사형 종결어미 정확 판정)
+    function endsWithNounEnding(str) {
+      if (!str) return false;
+      const clean = String(str).trim().replace(/\.+$/, "");
+      if (!clean) return false;
+      const lastChar = clean.charCodeAt(clean.length - 1);
+      if (lastChar < 0xAC00 || lastChar > 0xD7A3) return false;
+      const jong = (lastChar - 0xAC00) % 28;
+      return jong === 16 || jong === 10; // ㅁ(함,음,임,남,됨,름,룸,줌,낌,움,힘,님 등), ㄻ(삶,앎,만듦)
+    }
+
     function normalizeRecordSentence(rawText) {
       if (!rawText) return "";
       let text = rawText.trim();
@@ -11694,8 +11654,21 @@
         }
       });
 
-      // 국립국어원 어문 규범(맞춤법·띄어쓰기·보조용언·조사) 자동 보정
+      // 어미 중복 오류('~이룸함.', '~보여줌함.', '~함함.', '~음함.' 등) 원천 제거
       text = text
+        .replace(/([가-힣])함함\./g, "$1함.")
+        .replace(/([가-힣])음함\./g, "$1음.")
+        .replace(/이룸함\./g, "이룸.")
+        .replace(/보여줌함\./g, "보여 줌.")
+        .replace(/느낌함\./g, "느낌.")
+        .replace(/키움함\./g, "키움.")
+        .replace(/만듦함\./g, "만듦.")
+        .replace(/익힘함\./g, "익힘.")
+        .replace(/지님함\./g, "지님.")
+        .replace(/넓힘함\./g, "넓힘.")
+        .replace(/높임함\./g, "높임.")
+        .replace(/찾음함\./g, "찾음.")
+        .replace(/나눔함\./g, "나눔.")
         .replace(/([가-힣]+기)을(\s)/g, "$1를$2")
         .replace(/([가-힣]+기)과(\s)/g, "$1와$2")
         .replace(/([가-힣]+기)이(\s)/g, "$1가$2")
@@ -11718,13 +11691,14 @@
         .replace(/알려주/g, "알려 주")
         .replace(/높여주/g, "높여 주")
         .replace(/덜어주/g, "덜어 주")
+        .replace(/보여줌\./g, "보여 줌.")
         .replace(/빈교실/g, "빈 교실")
         .replace(/자기주도/g, "자기 주도")
         .replace(/문제해결/g, "문제 해결")
         .replace(/의사결정/g, "의사 결정")
         .replace(/합니다\./g, "함.")
-        .replace(/했습니다\./g, "하였음.")
-        .replace(/하였습니다\./g, "하였음.")
+        .replace(/했습니다\./g, "함.")
+        .replace(/하였습니다\./g, "함.")
         .replace(/보입니다\./g, "보임.")
         .replace(/드러납니다\./g, "드러남.")
         .replace(/기대됩니다\./g, "기대됨.")
@@ -11736,17 +11710,15 @@
         .replace(/이해한다\./g, "이해함.")
         .replace(/표현한다\./g, "표현함.")
         .replace(/참여한다\./g, "참여함.")
+        .replace(/설명한다\./g, "설명함.")
+        .replace(/탐구한다\./g, "탐구함.")
         .replace(/\s+([,.])/g, "$1")
         .replace(/\s{2,}/g, " ")
         .trim();
 
       if (!text.endsWith(".")) {
-        if (/[함음임남됨름]$/.test(text)) {
-          text += ".";
-        } else {
-          text += "함.";
-        }
-      } else if (!/(함\.|음\.|임\.|남\.|됨\.|름\.|있음\.|없음\.)$/.test(text)) {
+        text += endsWithNounEnding(text) ? "." : "함.";
+      } else if (!endsWithNounEnding(text)) {
         text = text.replace(/\.$/, "함.");
       }
 
@@ -11766,7 +11738,7 @@
         if (/[★☆◎●◆◇▶▷※]/.test(t)) {
           issues.push(`[${idx + 1}번 박스] 기재 지양 특수문자 포함`);
         }
-        if (!/(함\.|음\.|임\.|남\.|됨\.|름\.|있음\.|없음\.)$/.test(t)) {
+        if (!endsWithNounEnding(t)) {
           issues.push(`[${idx + 1}번 박스] 문장 끝이 명사형 종결어미(~함., ~음., ~보임. 등)가 아님`);
         }
       });
@@ -11776,254 +11748,238 @@
     // =========================================================================
     // 5. 탭 1: 교과학습발달상황 다중 변주 문장 생성 엔진
     // =========================================================================
+    // 담백하고 현실적인 초등 교사 관찰 기록체 프로필 (AI 투 과장 표현 전면 배제 · 단원당 100~150자)
     const LEVEL_PROFILES = {
-  "high": {
-    "label": "상 (우수·심화)",
-    "badgeClass": "bg-blue-100 text-blue-800 border-blue-300",
-    "openers": [
-      "관련 성취기준에 대한 깊이 있는 이해를 바탕으로",
-      "단원의 핵심 개념과 원리를 정확하게 파악하고",
-      "학습 목표와 성취기준의 핵심 요소를 완벽히 숙지하여",
-      "교과 핵심 역량과 탐구 원리를 체계적으로 이해하고",
-      "단원 학습 활동 전반에 걸쳐 높은 성취 수준을 보이며",
-      "배운 개념 간의 연결 관계를 논리적으로 구조화하여",
-      "교과서 핵심 원리는 물론 심화 탐구 주제까지 폭넓게 이해하며",
-      "수업 내용에 대한 탁월한 이해력과 탐구적 호기심을 바탕으로",
-      "성취기준에서 요구하는 지식·이해·과정·기능을 고르게 체득하여",
-      "새로운 학습 개념을 기존 배경지식과 유기적으로 연결하며",
-      "단원의 주요 탐구 질문에 대해 깊이 있게 사고하고 분석하며",
-      "학습 과제의 의도와 핵심 원리를 빠르고 정확하게 통찰하여"
-    ],
-    "performances": [
-      "구체적인 탐구 과제에 능동적으로 적용하고 자신만의 언어로 조리 있게 설명함.",
-      "복합적인 문제 상황에서도 핵심 원리를 유연하게 연결하여 창의적으로 해결함.",
-      "배운 내용을 실생활 사례로 확장하여 분석하고 모둠원들에게 알기 쉽게 공유함.",
-      "탐구 절차와 방법을 주도적으로 설계하여 완성도 높은 학습 결과물을 도출함.",
-      "다양한 관점에서 자료를 비교·분석하고 논리적인 근거를 들어 명확하게 발표함.",
-      "심화 문제를 스스로 해결할 뿐만 아니라 풀이 과정을 체계적으로 정리하여 제시함.",
-      "모둠 탐구 활동에서 핵심 아이디어를 제안하고 협력적 문제 해결 과정을 주도함.",
-      "학습 자료와 시각 매체를 효과적으로 활용하여 탐구 결과를 설득력 있게 표현함.",
-      "배운 원리를 변형하거나 새로운 상황에 응용하여 독창적인 해결 방안을 도출함.",
-      "정확한 개념 이해를 바탕으로 오류 없이 과제를 수행하고 친구들의 이해를 도움.",
-      "질문과 토의 과정에서 핵심을 짚어내며 깊이 있는 배움 나눔을 실천함.",
-      "단원 평가 및 수행 과제에서 탁월한 문제 해결력과 표현력을 발휘하여 완성함."
-    ],
-    "closers": [
-      "나아가 스스로 심화 과제를 찾아 탐구하는 자기 주도적 학습 태도로 꾸준한 성장을 이룸.",
-      "수업 활동에 대한 높은 몰입도와 성찰 습관을 바탕으로 교과 역량이 크게 신장됨.",
-      "친구의 의견을 경청하고 배움을 나누는 태도가 훌륭하여 학급 면학 분위기 조성에 기여함.",
-      "배운 원리를 새로운 상황에 응용하는 능력이 탁월하여 앞으로의 성장이 더욱 기대됨.",
-      "질문과 탐구를 즐기는 자기 주도적 학습 습관이 바르게 정착되어 성취도가 매우 우수함.",
-      "배움 공책에 핵심 내용과 자신의 성찰을 체계적으로 정리하며 깊이 있는 학업 성취를 이룸.",
-      "교과에 대한 높은 흥미와 탐구 열정을 바탕으로 한층 더 발전된 학습 역량을 보여줌.",
-      "지식 습득에 그치지 않고 실생활 실천으로 연결하는 모범적인 학습 태도를 지님.",
-      "분석적 사고력과 창의적 표현력이 조화롭게 발달하여 향후 심화 학습에서도 활약이 기대됨.",
-      "매 수업 시간 주도적이고 열정적인 참여 자세로 자신만의 배움을 탄탄히 확장해 나감.",
-      "어려운 문제에도 끝까지 파고들어 해답을 찾아내는 학구적인 태도가 매우 돋보임.",
-      "협력과 배려를 바탕으로 모둠 학습의 질을 높이며 전인적인 교과 성장을 보여줌."
-    ]
-  },
-  "mid": {
-    "label": "중 (보통·성실)",
-    "badgeClass": "bg-emerald-100 text-emerald-800 border-emerald-300",
-    "openers": [
-      "단원의 주요 학습 내용과 성취기준을 성실하게 익히며",
-      "수업 활동에 차분하고 바른 자세로 참여하여",
-      "교과에서 다루는 기본 개념과 절차를 바르게 이해하고",
-      "주어진 학습 목표를 달성하기 위해 꾸준히 노력하며",
-      "선생님의 안내와 탐구 절차를 충실히 따르며",
-      "단원의 핵심 개념과 기초 원리를 안정적으로 파악하고",
-      "매 시간 성실한 학습 태도로 수업 내용에 집중하며",
-      "교과서와 학습 자료를 바탕으로 주요 개념을 차근차근 정리하며",
-      "모둠 및 개별 학습 활동에 책임감 있는 자세로 참여하며",
-      "성취기준의 기본 요소를 이해하고 학습 과정에 성실히 임하며",
-      "배운 내용을 복습하고 확인하는 바른 학습 습관을 바탕으로",
-      "수업 시간 제시되는 탐구 질문과 활동 방법을 잘 숙지하여"
-    ],
-    "performances": [
-      "핵심 과제를 차근차근 해결하고 배운 내용을 공책에 알맞게 정리함.",
-      "모둠 활동에서 자신이 맡은 역할을 책임감 있게 완수하며 활동 목표에 도달함.",
-      "기본 원리를 바탕으로 제시된 문제를 안정적으로 해결하고 발표 활동에 참여함.",
-      "수업 교구와 학습 자료를 올바르게 활용하여 과제를 성실하게 마무리함.",
-      "실생활과 관련된 예시를 통해 개념을 이해하고 이를 활동지에 바르게 표현함.",
-      "정해진 절차에 따라 실험·실습 및 표현 활동을 무리 없이 수행하여 완성함.",
-      "친구들과 의견을 나누며 모둠 과제를 협력적으로 해결하고 결과를 공유함.",
-      "주요 개념을 적용한 기본 문제를 정확하게 풀고 틀린 부분을 스스로 고쳐 봄.",
-      "학습 활동지의 문항을 빠짐없이 작성하고 자신의 생각이나 느낌을 알맞게 덧붙임.",
-      "시각 자료와 구체물을 활용하여 단원의 중심 내용을 파악하고 요약하여 설명함.",
-      "안내된 기준에 맞추어 작품을 제작하거나 발표 자료를 깔끔하게 구성함.",
-      "수업 중 배운 핵심 어휘와 개념을 활용하여 주어진 과제를 성실히 수행함."
-    ],
-    "closers": [
-      "꾸준한 복습과 성실한 참여를 통해 기초 학력과 자신감을 안정적으로 기르고 있음.",
-      "과제를 끝까지 해결하려는 태도가 바르게 형성되어 점진적인 변화와 성장을 보임.",
-      "모둠원들과 협력하며 배우는 과정에서 학습 흥미와 성취도가 고르게 향상됨.",
-      "틀린 문제를 다시 점검하며 보완하는 자기 주도적 노력으로 실력이 탄탄해지고 있음.",
-      "차분하고 성실한 학습 습관을 바탕으로 단원 성취기준에 고르게 도달함.",
-      "수업에 대한 관심과 참여도가 꾸준히 유지되어 앞으로의 발전이 더욱 기대됨.",
-      "배운 내용을 자신의 것으로 만들려는 성실한 노력이 뒷받침되어 안정적인 성취를 보임.",
-      "기초 개념을 튼튼히 다지며 응용 문제에도 도전하려는 긍정적인 태도를 기르고 있음.",
-      "친구들의 발표를 잘 경청하고 자신의 과제에 집중하는 바른 학습 태도가 돋보임.",
-      "매 단원 과제를 미루지 않고 성실하게 완수하며 자기 주도적 학습 역량을 키워 감.",
-      "수업 활동을 즐기며 꾸준히 노력하는 자세를 통해 교과 역량이 고르게 자라남.",
-      "안정적인 이해력을 바탕으로 다음 단계의 학습도 무리 없이 소화할 것으로 기대됨."
-    ]
-  },
-  "low": {
-    "label": "하 (노력·향상)",
-    "badgeClass": "bg-amber-100 text-amber-800 border-amber-300",
-    "openers": [
-      "단원의 기초 개념을 익히기 위해 수업 활동에 관심을 기울이며",
-      "구체물과 시각 자료를 활용한 기초 탐구 활동에 참여하며",
-      "선생님과 친구들의 도움 속에 기본 학습 과정을 차근차근 따라가며",
-      "기초 원리를 이해하고자 포기하지 않고 꾸준히 연습하며",
-      "단계별 학습 안내에 따라 기본 과제를 해결하려고 노력하며",
-      "친숙한 실생활 사례와 놀이 중심 학습 활동에 흥미를 보이며",
-      "기초 학습 요소를 하나씩 짚어 가는 보충·반복 활동에 참여하며",
-      "모둠 친구들과 함께하는 협동 학습 과정에서 용기를 얻어",
-      "선생님의 개별 피드백과 격려를 바탕으로 학습 방법을 익히며",
-      "기본 개념과 용어의 뜻을 이해하기 위해 차분히 주의를 기울이며",
-      "시청각 자료와 조작 교구를 활용한 체험형 수업에 즐겁게 참여하며",
-      "자신의 학습 속도에 맞추어 기초부터 차근차근 다져 나가며"
-    ],
-    "performances": [
-      "핵심 요소를 하나씩 확인하고 기초적인 학습 과제를 성실히 수행함.",
-      "반복 연습과 개별 피드백을 통해 어려워하던 개념을 점차 이해하며 과제를 완성함.",
-      "모둠 친구들과 함께하는 협동 학습에 즐겁게 참여하며 기본 기능을 익힘.",
-      "기초 활동지를 차분히 해결하며 학습에 대한 두려움을 줄이고 성취감을 경험함.",
-      "일상 속 친숙한 사례를 통해 기본 원리를 파악하고 자신의 생각을 표현하려고 노력함.",
-      "구체물 조작 활동과 단계별 안내 자료를 활용하여 기본 문제를 해결함.",
-      "모둠에서 자신이 할 수 있는 역할을 맡아 끝까지 참여하며 결과물을 함께 완성함.",
-      "핵심 낱말과 기초 원리를 따라 쓰고 읽으며 단원의 기본 내용을 익힘.",
-      "어려운 문항도 바로 포기하지 않고 힌트 자료를 참고하여 스스로 해결해 봄.",
-      "체험 및 표현 활동에 밝은 표정으로 참여하며 기초적인 표현 방법을 익힘.",
-      "선생님과 함께 풀이 순서를 하나씩 점검하며 기초 과제를 무사히 마무리함.",
-      "수업 중 제시된 기본 연습 과제를 차분하게 따라 하며 기초 기능을 습득함."
-    ],
-    "closers": [
-      "작은 성공 경험을 쌓아 가며 학습 태도와 자신감이 긍정적으로 변화하고 성장함.",
-      "꾸준히 노력하는 자세가 돋보이며 기초 역량이 단계적으로 향상되는 모습을 보임.",
-      "수업 참여도가 점차 높아지고 있어 지속적인 격려를 통해 더 큰 발전이 기대됨.",
-      "자신의 속도에 맞춰 과제를 끝까지 완수하려는 끈기를 기르며 의미 있는 성장을 이룸.",
-      "기초 개념 정착을 위한 성실한 노력을 바탕으로 학습 흥미를 꾸준히 키워 가고 있음.",
-      "모둠 활동과 체험 수업에서 밝고 긍정적인 태도를 보이며 점진적인 성취 향상을 이룸.",
-      "배움에 대한 두려움을 이겨내고 스스로 해 보려는 의지가 자라나고 있어 격려가 됨.",
-      "기초 학력 다지기 활동에 성실히 참여하며 이전보다 한결 안정된 학습 태도를 보임.",
-      "선생님의 조언을 수용하여 부족한 부분을 보완하려는 긍정적인 학습 자세를 지님.",
-      "반복 학습을 통해 기본기를 다져 가고 있어 앞으로의 꾸준한 향상이 기대됨.",
-      "칭찬과 격려 속에서 발표와 과제 수행에 대한 자신감이 눈에 띄게 자라남.",
-      "포기하지 않고 끝까지 참여하는 성실함을 바탕으로 기초 성취 수준에 도달해 가고 있음."
-    ]
-  }
-};
+      high: {
+        label: "상 (우수)",
+        badgeClass: "bg-blue-100 text-blue-800 border-blue-300",
+        singleTemplates: [
+          "{t1} 활동에서 핵심 원리를 정확히 이해하고 관련 문제를 막힘없이 해결함.",
+          "{t1} 과정에서 주요 내용을 바르게 파악하여 자신의 말로 알기 쉽게 설명함.",
+          "{t1} 수업에서 개념을 차분히 익히고 배운 내용을 새로운 상황에도 잘 적용함.",
+          "{t1}에 흥미를 갖고 스스로 자료를 찾아보며 과제를 완성도 있게 마무리함.",
+          "{t1} 학습에서 핵심 내용을 잘 이해하여 모둠 활동 시 친구들의 이해를 도움.",
+          "{t1} 과정에서 근거를 들어 자신의 생각을 논리적으로 정리해 발표함."
+        ],
+        pairTemplates: [
+          "{t1} 활동의 원리를 정확히 이해하고, {t2} 과제도 바르게 해결함.",
+          "{t1} 내용을 차분히 정리하며 {t2} 활동에서도 완성도 있게 결과를 도출함.",
+          "{t1}에 높은 관심을 보였으며, {t2} 과정에서도 자신의 생각을 조리 있게 설명함.",
+          "{t1}의 핵심을 잘 파악하고 {t2} 수업에서 구체적인 예를 들어 발표함."
+        ],
+        closers: [
+          "배운 내용을 공책에 꼼꼼히 정리하는 습관이 잘 잡혀 있음.",
+          "모둠 토의에서 친구의 의견을 경청하고 생각을 차분하게 나눔.",
+          "과제에 꾸준히 집중하며 스스로 오류를 점검해 고치는 태도가 바름.",
+          "실생활 사례와 연결해 생각하는 힘이 좋아 수업 참여도가 높음.",
+          "궁금한 점을 질문하며 배운 내용을 자기 것으로 만드는 노력이 돋보임.",
+          "친구들과 협력하여 활동을 마무리하고 결과를 또렷하게 발표함."
+        ]
+      },
+      mid: {
+        label: "중 (보통)",
+        badgeClass: "bg-emerald-100 text-emerald-800 border-emerald-300",
+        singleTemplates: [
+          "{t1} 활동에서 기본 개념을 바르게 이해하고 제시된 과제를 성실히 해결함.",
+          "{t1} 수업에 차분히 참여하여 배운 내용을 활동지에 알맞게 정리함.",
+          "{t1} 과정에서 순서와 방법을 익히고 기본 문제를 무리 없이 풀어 냄.",
+          "{t1} 학습에서 교사의 안내를 잘 따르며 주어진 과제를 끝까지 마무리함.",
+          "{t1}에 관심을 갖고 친구들과 의견을 나누며 활동 목표에 도달함.",
+          "{t1} 수업에서 주요 내용을 익히고 실생활 예시를 들어 간단히 설명함."
+        ],
+        pairTemplates: [
+          "{t1}의 기본 내용을 이해하고, {t2} 활동에도 성실히 참여하여 마무리함.",
+          "{t1} 과정을 차근차근 익히며 {t2} 과제를 안내에 따라 바르게 해결함.",
+          "{t1}에서 배운 내용을 바탕으로 {t2} 활동에 집중하여 결과를 정리함.",
+          "{t1}의 핵심을 파악하고 {t2} 수업에서 모둠원들과 협력해 수행함."
+        ],
+        closers: [
+          "바른 자세로 설명을 경청하고 틀린 부분은 스스로 다시 확인함.",
+          "모둠 활동에서 맡은 역할을 성실히 수행하며 친구들과 잘 어울림.",
+          "매 시간 준비물을 잘 챙기고 과제를 미루지 않고 차분히 해결함.",
+          "수업 내용에 꾸준히 집중하며 기초 실력을 차근차근 다져 감.",
+          "질문에 성실히 답하고 배운 내용을 복습하려는 태도가 바름.",
+          "활동 순서를 잘 지키며 친구들의 발표를 경청하는 태도가 좋음."
+        ]
+      },
+      low: {
+        label: "하 (노력)",
+        badgeClass: "bg-amber-100 text-amber-800 border-amber-300",
+        singleTemplates: [
+          "{t1} 활동에서 기초 내용을 익히기 위해 교사의 안내에 따라 차근차근 참여함.",
+          "{t1} 수업에서 그림과 구체물 자료를 활용하여 기본 문제를 해결해 봄.",
+          "{t1} 학습에 관심을 갖고 도움 자료를 참고하며 기초 과제를 마무리함.",
+          "{t1} 과정에서 기본 개념을 반복 연습하며 이해의 폭을 조금씩 넓혀 감.",
+          "{t1} 수업에서 모둠 친구들과 함께 활동하며 기본 방법을 차분히 익힘.",
+          "{t1} 활동의 핵심 낱말과 순서를 확인하며 주어진 과제를 성실히 따라감."
+        ],
+        pairTemplates: [
+          "{t1}의 기초 내용을 차근차근 익히고, {t2} 활동에도 도움을 받아 참여함.",
+          "{t1} 과정을 단계별로 연습하며 {t2}의 기본 과제를 끝까지 해결해 봄.",
+          "{t1}에서 배운 기본 방법을 바탕으로 {t2} 활동에 밝은 표정으로 참여함.",
+          "{t1}의 핵심 내용을 확인하고 {t2} 수업에서 친구들과 함께 수행함."
+        ],
+        closers: [
+          "포기하지 않고 끝까지 해 보려는 태도로 조금씩 자신감을 키워 감.",
+          "개별 피드백을 잘 수용하고 틀린 부분을 다시 고쳐 보려 노력함.",
+          "체험과 모둠 활동에 밝은 태도로 참여하며 수업 흥미를 높여 감.",
+          "기초 활동지를 차분히 해결하며 학습 습관을 안정적으로 기르고 있음.",
+          "선생님의 안내에 귀 기울이며 스스로 과제를 마무리하려는 의지가 보임.",
+          "친구의 도움을 받아 기본 활동을 익히고 점차 적극적으로 참여함."
+        ]
+      }
+    };
 
-
-    function getActiveStandardsForSubject() {
+    // 선택한 성취기준을 단원(unit)별로 중복 없이 묶어 반환 (탐구 도입 단원 중복 배정 방지)
+    function getGroupedStandardsByUnit() {
       const gradeData = CURRICULUM_DB[state.subjectGrade] || {};
       const units = gradeData[state.subjectName] || [];
-      const currentUnit = units[state.subjectUnitIndex] || units[0];
-      if (!currentUnit) return [];
+      const groups = [];
+      const pickedSet = new Set(state.selectedStandardCodes || []);
+      const assignedCodes = new Set();
 
-      const allSubjectStandards = [];
-      const seenCodes = new Set();
-      units.forEach(u => {
-        (u.standards || []).forEach(s => {
-          if (!seenCodes.has(s.code)) {
-            seenCodes.add(s.code);
-            allSubjectStandards.push(s);
-          }
-        });
+      // 1순위: 현재 보고 있는 단원 및 정규 단원(탐구 도입 제외) 우선 매칭
+      const unitOrder = units.map((u, idx) => ({ u, idx })).sort((a, b) => {
+        const aIsIntro = a.u.unit.includes("탐구 도입") || a.u.unit.includes("도입 단원");
+        const bIsIntro = b.u.unit.includes("탐구 도입") || b.u.unit.includes("도입 단원");
+        if (aIsIntro !== bIsIntro) return aIsIntro ? 1 : -1;
+        return a.idx - b.idx;
       });
-      const picked = allSubjectStandards.filter(s => state.selectedStandardCodes.includes(s.code));
-      const baseList = picked.length > 0 ? picked : currentUnit.standards;
-      const customList = state.customStandards.map((txt, idx) => ({
-        code: `[자체-${idx + 1}]`,
-        text: txt,
-        topic: txt
-      }));
-      return [...baseList, ...customList];
+
+      const groupByIdx = {};
+      unitOrder.forEach(({ u, idx }) => {
+        const matched = (u.standards || []).filter(s => pickedSet.has(s.code) && !assignedCodes.has(s.code));
+        if (matched.length > 0) {
+          matched.forEach(s => assignedCodes.add(s.code));
+          groupByIdx[idx] = {
+            unitIndex: idx,
+            unitName: u.unit,
+            standards: matched
+          };
+        }
+      });
+
+      Object.keys(groupByIdx).map(Number).sort((a, b) => a - b).forEach(idx => {
+        groups.push(groupByIdx[idx]);
+      });
+
+      // 담은 것이 하나도 없으면 현재 선택된 단원의 첫 번째 성취기준을 기본값으로 사용
+      if (groups.length === 0 && units.length > 0) {
+        const curUnit = units[state.subjectUnitIndex] || units[0];
+        if (curUnit && curUnit.standards && curUnit.standards.length > 0) {
+          groups.push({
+            unitIndex: state.subjectUnitIndex || 0,
+            unitName: curUnit.unit,
+            standards: [curUnit.standards[0]]
+          });
+        }
+      }
+
+      if (state.customStandards && state.customStandards.length > 0) {
+        groups.push({
+          unitIndex: -1,
+          unitName: "직접 입력 단원",
+          standards: state.customStandards.map((txt, idx) => ({
+            code: `[자체-${idx + 1}]`,
+            text: txt,
+            topic: txt
+          }))
+        });
+      }
+
+      return groups;
+    }
+
+    function getActiveStandardsForSubject() {
+      const groups = getGroupedStandardsByUnit();
+      const flat = [];
+      groups.forEach(g => {
+        g.standards.forEach(s => flat.push(s));
+      });
+      return flat;
+    }
+
+    // 음절이 절대 중간에 잘리지 않도록 자연스러운 명사구로 정리
+    function cleanTopicPhrase(rawTopic) {
+      let t = String(rawTopic || "").trim().replace(/\.$/, "");
+      // 괄호 안의 긴 부연 설명이 있으면 간결화
+      t = t.replace(/\([^)]{10,}\)/g, "").replace(/\s{2,}/g, " ").trim();
+      // 'A하고 B하기' 형태로 지나치게 긴 경우(44자 초과) 앞의 접속절을 자연스럽게 정리
+      if (t.length > 44) {
+        const parts = t.split(/,\s*|하고\s+|하며\s+/);
+        if (parts.length > 1 && parts[parts.length - 1].length >= 12) {
+          t = parts[parts.length - 1].trim();
+        }
+      }
+      return t;
+    }
+
+    // 단원 1개당 100~150자 선의 담백한 교사 관찰 문단 생성
+    function buildUnitParagraph(unitGroup, levelKey, seed) {
+      const profile = LEVEL_PROFILES[levelKey] || LEVEL_PROFILES.high;
+      const stds = unitGroup.standards || [];
+
+      // 1~2학년 바·슬·즐 통합교과 전용 (105~145자 간결 구성)
+      if (state.subjectGrade <= 2 && state.subjectName.includes("통합")) {
+        const baStd = stds.find(s => s.subjectTag === "바른 생활") || stds[0];
+        const seulStd = stds.find(s => s.subjectTag === "슬기로운 생활") || stds[1] || stds[0];
+        const jeulStd = stds.find(s => s.subjectTag === "즐거운 생활") || stds[2] || stds[0];
+
+        const baTop = cleanTopicPhrase(baStd ? baStd.topic : "학교 규칙 지키기");
+        const seulTop = cleanTopicPhrase(seulStd ? seulStd.topic : "주변 모습 살펴보기");
+        const jeulTop = cleanTopicPhrase(jeulStd ? jeulStd.topic : "즐겁게 표현 놀이하기");
+
+        const s1 = `바른 생활에서 ${baTop}을 실천하고, 슬기로운 생활의 ${seulTop} 활동에 호기심을 갖고 관찰함.`;
+        const s2 = `즐거운 생활에서 ${jeulTop}에 밝은 표정으로 참여하며 친구들과 잘 어울림.`;
+        return normalizeRecordSentence(`${s1} ${s2}`);
+      }
+
+      const t1 = cleanTopicPhrase(stds[0] ? (stds[0].topic || stds[0].text) : `${state.subjectName} 핵심 활동`);
+      const t2 = stds.length > 1 ? cleanTopicPhrase(stds[1].topic || stds[1].text) : "";
+
+      let mainSent = "";
+      if (t2 && (t1.length + t2.length) <= 64) {
+        const tpl = profile.pairTemplates[seed % profile.pairTemplates.length];
+        mainSent = tpl.replace("{t1}", t1).replace("{t2}", t2);
+      } else {
+        const tpl = profile.singleTemplates[seed % profile.singleTemplates.length];
+        mainSent = tpl.replace("{t1}", t1);
+      }
+
+      // 두 번째 문장: 선택된 수업 태도 칩과 담백한 기본 관찰 문장을 교차 활용
+      const activeTraitObjs = SUBJECT_TRAIT_CHIPS.filter(t => state.selectedSubjectTraits.includes(t.id));
+      let secondSent = "";
+      if (activeTraitObjs.length > 0 && seed % 2 === 0) {
+        secondSent = activeTraitObjs[seed % activeTraitObjs.length].phrase;
+      } else {
+        secondSent = profile.closers[(seed * 2 + 1) % profile.closers.length];
+      }
+
+      let combined = normalizeRecordSentence(`${mainSent} ${secondSent}`);
+
+      // 만약 155자를 넘어가면 두 번째 문장을 더 간결한 관찰 문장으로 교체해 100~150자 선에 맞춤
+      if (combined.length > 155) {
+        const briefClosers = [
+          "바른 자세로 경청하며 과제를 성실히 마무리함.",
+          "모둠 활동에서 친구와 협력하며 적극적으로 참여함.",
+          "배운 내용을 스스로 확인하고 차분히 정리함."
+        ];
+        combined = normalizeRecordSentence(`${mainSent} ${briefClosers[seed % briefClosers.length]}`);
+      }
+
+      return combined;
     }
 
     function buildSingleSubjectSentence(index, levelKey, seedOffset) {
-      const profile = LEVEL_PROFILES[levelKey] || LEVEL_PROFILES.high;
-      const standards = getActiveStandardsForSubject();
-      const seed = index + seedOffset + state.subjectVariationSeed;
+      const unitGroups = getGroupedStandardsByUnit();
+      const baseSeed = index + seedOffset + state.subjectVariationSeed;
 
-      if (state.subjectGrade <= 2 && state.subjectName.includes("통합")) {
-        const baStd = standards.find(s => s.subjectTag === "바른 생활") || standards[0];
-        const seulStd = standards.find(s => s.subjectTag === "슬기로운 생활") || standards[1] || standards[0];
-        const jeulStd = standards.find(s => s.subjectTag === "즐거운 생활") || standards[2] || standards[0];
+      // 선택한 단원(1개 이상)마다 100~150자씩 생성하여 자연스럽게 이어 붙임 (1-A안)
+      const paragraphs = unitGroups.map((group, gIdx) => {
+        return buildUnitParagraph(group, levelKey, baseSeed + gIdx * 3);
+      });
 
-        const baTop = baStd ? baStd.topic : "학교 규칙과 예절 실천하기";
-        const seulTop = seulStd ? seulStd.topic : "주변 자연과 마을 탐색하기";
-        const jeulTop = jeulStd ? jeulStd.topic : "노래와 신체·조형 표현 놀이하기";
-
-        const baTemplates = [
-          `바른 생활 영역에서 ${baTop}의 중요성을 알고 일상에서 바르게 실천하며,`,
-          `바른 생활 시간에는 ${baTop} 활동에 성실히 참여하여 바른 태도를 기르고,`,
-          `${attachJosa(baTop, "을/를")} 통해 약속과 질서를 존중하는 태도를 몸소 실천하며,`,
-          `바른 생활의 ${baTop} 학습에서 친구와 주변 사람을 배려하는 생활 습관을 기르며,`,
-          `바른 생활 활동을 통해 ${baTop}의 가치를 이해하고 학교와 가정에서 꾸준히 실천하며,`,
-          `바른 생활 시간에 ${baTop}에 앞장서며 더불어 살아가는 공동체 의식을 함양하고,`
-        ];
-        const seulTemplates = [
-          `슬기로운 생활 영역에서는 ${seulTop}에 호기심을 가지고 관찰·조사하여 특징을 또렷하게 설명함.`,
-          `슬기로운 생활의 ${seulTop} 활동에서 주변 현상을 자세히 살펴보고 알게 된 점을 조리 있게 발표함.`,
-          `슬기로운 생활 시간에 ${attachJosa(seulTop, "을/를")} 주도적으로 수행하며 탐구력을 키움.`,
-          `슬기로운 생활에서 ${seulTop}에 흥미를 갖고 다양한 매체와 자료로 조사하여 창의적으로 정리함.`,
-          `슬기로운 생활의 ${seulTop} 과정에서 궁금한 점을 스스로 질문하고 탐색하여 해답을 찾음.`,
-          `슬기로운 생활 탐구 시간에 ${seulTop} 과제를 친구들과 협력하여 해결하며 사고력을 넓힘.`
-        ];
-        const jeulTemplates = [
-          `또한 즐거운 생활 영역에서 ${jeulTop}에 밝은 표정으로 참여하며 풍부한 감성과 창의성을 표현함.`,
-          `아울러 즐거운 생활의 ${jeulTop} 활동에서 친구들과 규칙을 지키며 즐겁게 참여하고 창의적으로 작품을 완성함.`,
-          `더불어 즐거운 생활 시간을 통해 ${attachJosa(jeulTop, "을/를")} 신나게 경험하며 심미적 감수성과 협동심을 조화롭게 기름.`,
-          `나아가 즐거운 생활에서 ${jeulTop}에 적극적으로 참여하여 자신의 느낌과 생각을 다채롭게 구현함.`,
-          `이와 함께 즐거운 생활의 ${jeulTop} 과정에서 안전 수칙을 지키며 친구들과 활기차고 조화롭게 어울림.`,
-          `끝으로 즐거운 생활 영역의 ${jeulTop} 활동에서 다양한 재료와 몸짓으로 아름다움을 표현하며 성취감을 느낌.`
-        ];
-
-        const p1 = baTemplates[seed % baTemplates.length];
-        const p2 = seulTemplates[(seed + 1) % seulTemplates.length];
-        const p3 = jeulTemplates[(seed + 2) % jeulTemplates.length];
-        return normalizeRecordSentence(`${p1} ${p2} ${p3}`);
-      }
-
-      const topics = standards.map(s => s.topic || s.text);
-      const primaryTopic = topics[seed % Math.max(1, topics.length)] || `${state.subjectName} 단원 핵심 활동`;
-      const secondaryTopic = topics.length > 1 ? topics[(seed + 1) % topics.length] : null;
-
-      const opener = profile.openers[seed % profile.openers.length];
-      const perf = profile.performances[(seed * 2 + 1) % profile.performances.length];
-      const closer = profile.closers[(seed * 3 + 2) % profile.closers.length];
-
-      const activeTraitObjs = SUBJECT_TRAIT_CHIPS.filter(t => state.selectedSubjectTraits.includes(t.id));
-      const traitPhrase = activeTraitObjs.length > 0
-        ? activeTraitObjs[seed % activeTraitObjs.length].phrase
-        : "수업 활동 전반에 흥미와 열의를 가지고 참여하며";
-
-      const patternType = seed % 8;
-      let rawSentence = "";
-
-      if (patternType === 0) {
-        rawSentence = `${primaryTopic} 활동에서 ${opener} ${perf} 특히 ${ secondaryTopic ? `${secondaryTopic} 과정에서도 ` : "" }${traitPhrase} ${closer}`;
-      } else if (patternType === 1) {
-        rawSentence = `${traitPhrase} ${primaryTopic} 학습에 주도적으로 참여함. ${ secondaryTopic ? `또한 ${secondaryTopic} 활동 시 ` : "" }${opener} ${perf} ${closer}`;
-      } else if (patternType === 2) {
-        rawSentence = `${opener} ${primaryTopic}${ secondaryTopic ? ` 및 ${secondaryTopic}` : "" } 과제를 성실히 수행함. ${traitPhrase} ${perf} ${closer}`;
-      } else if (patternType === 3) {
-        rawSentence = `${primaryTopic} 단원 학습에서 ${perf} 아울러 ${ secondaryTopic ? `${secondaryTopic} 탐구 시 ` : "" }${traitPhrase} ${closer}`;
-      } else if (patternType === 4) {
-        rawSentence = `${state.subjectName} 교과 ${primaryTopic} 수업에서 ${traitPhrase} ${opener} ${perf} ${ secondaryTopic ? `더불어 ${secondaryTopic} 활동에서도 ` : "" }${closer}`;
-      } else if (patternType === 5) {
-        rawSentence = `${opener} ${primaryTopic} 탐구 과정에 적극적으로 임하며 ${perf} ${ secondaryTopic ? `나아가 ${secondaryTopic} 학습과 연계하여 ` : "" }${traitPhrase} ${closer}`;
-      } else if (patternType === 6) {
-        rawSentence = `${secondaryTopic ? `${attachJosa(primaryTopic, "과/와")} ${secondaryTopic}` : primaryTopic} 학습에서 ${traitPhrase} ${perf} ${opener} ${closer}`;
-      } else {
-        rawSentence = `평소 ${traitPhrase} ${primaryTopic} 과제를 수행할 때 ${opener} ${perf} ${ secondaryTopic ? `특히 ${secondaryTopic} 영역에서도 ` : "" }${closer}`;
-      }
-
-      return normalizeRecordSentence(rawSentence);
+      return normalizeRecordSentence(paragraphs.join(" "));
     }
 
     function generateSubjectRecords() {
@@ -12467,7 +12423,7 @@
           }
           state.subjectUnitIndex = 0;
           const units = CURRICULUM_DB[g][state.subjectName] || [];
-          state.selectedStandardCodes = units[0] ? units[0].standards.map(s => s.code) : [];
+          state.selectedStandardCodes = (units[0] && units[0].standards && units[0].standards[0]) ? [units[0].standards[0].code] : [];
           generateSubjectRecords();
           renderAll();
         });
@@ -12490,7 +12446,7 @@
           state.subjectName = subj;
           state.subjectUnitIndex = 0;
           const units = CURRICULUM_DB[state.subjectGrade][subj] || [];
-          state.selectedStandardCodes = units[0] ? units[0].standards.map(s => s.code) : [];
+          state.selectedStandardCodes = (units[0] && units[0].standards && units[0].standards[0]) ? [units[0].standards[0].code] : [];
           generateSubjectRecords();
           renderAll();
         });
@@ -12504,17 +12460,62 @@
         banner12.classList.add("hidden");
       }
 
-      // 3. 단원 드롭다운
+      // 3. 단원 드롭다운 (각 단원에 담은 성취기준 개수 표시)
       const unitSelect = document.getElementById("unitSelect");
       const units = (CURRICULUM_DB[state.subjectGrade] && CURRICULUM_DB[state.subjectGrade][state.subjectName]) || [];
+      const pickedCodeSet = new Set(state.selectedStandardCodes || []);
       unitSelect.innerHTML = "";
       units.forEach((u, idx) => {
         const opt = document.createElement("option");
         opt.value = String(idx);
-        opt.textContent = u.unit;
+        const cntInUnit = (u.standards || []).filter(s => pickedCodeSet.has(s.code)).length;
+        opt.textContent = cntInUnit > 0 ? `${u.unit}  [✓ ${cntInUnit}개 담김]` : u.unit;
         if (idx === state.subjectUnitIndex) opt.selected = true;
         unitSelect.appendChild(opt);
       });
+
+      // 3-B. 내가 담은 성취기준 바구니 렌더링 (여러 단원 중복 선택 확인·개별 삭제)
+      const basketListEl = document.getElementById("selectedStandardsBasketList");
+      const basketSummaryEl = document.getElementById("selectedBasketSummary");
+      if (basketListEl && basketSummaryEl) {
+        const groups = getGroupedStandardsByUnit();
+        const totalStdCount = groups.reduce((acc, g) => acc + g.standards.length, 0);
+        const minChars = groups.length * 100;
+        const maxChars = groups.length * 150;
+        basketSummaryEl.textContent = `${groups.length}개 단원 · ${totalStdCount}개 성취기준 담김 (예상 분량 약 ${minChars}~${maxChars}자)`;
+        basketListEl.innerHTML = "";
+
+        groups.forEach(group => {
+          const shortUnit = group.unitName.split("(")[0].trim();
+          group.standards.forEach(std => {
+            const chip = document.createElement("button");
+            chip.type = "button";
+            chip.className = "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white border border-blue-300 hover:border-rose-400 hover:bg-rose-50 text-[11px] font-bold text-slate-800 transition";
+            chip.title = `${group.unitName} | ${std.text}`;
+            chip.innerHTML = `
+              <span class="px-1.5 py-0.5 rounded bg-blue-100 text-blue-800 text-[10px] font-extrabold">${shortUnit}</span>
+              <span class="text-blue-700 font-extrabold">${std.code}</span>
+              <span class="max-w-[160px] truncate">${std.topic || std.text}</span>
+              <span class="text-rose-500 font-extrabold ml-0.5">✕</span>
+            `;
+            chip.addEventListener("click", () => {
+              if (std.code.startsWith("[자체-")) {
+                const idx = parseInt(std.code.replace(/[^0-9]/g, ""), 10) - 1;
+                if (idx >= 0) state.customStandards.splice(idx, 1);
+              } else {
+                if (state.selectedStandardCodes.length <= 1 && state.customStandards.length === 0) {
+                  showToast("최소 1개 이상의 성취기준이 담겨 있어야 합니다.", "warn");
+                  return;
+                }
+                state.selectedStandardCodes = state.selectedStandardCodes.filter(c => c !== std.code);
+              }
+              generateSubjectRecords();
+              renderAll();
+            });
+            basketListEl.appendChild(chip);
+          });
+        });
+      }
 
       // 4. 성취기준 체크박스 리스트
       const stdContainer = document.getElementById("achievementStandardList");
@@ -16565,7 +16566,7 @@
         state.subjectName = "학교자율시간";
         state.subjectUnitIndex = 0;
         const units = CURRICULUM_DB[g]["학교자율시간"] || [];
-        state.selectedStandardCodes = units[0] ? units[0].standards.map(s => s.code) : [];
+        state.selectedStandardCodes = (units[0] && units[0].standards && units[0].standards[0]) ? [units[0].standards[0].code] : [];
         generateSubjectRecords();
         state.activeBranch = "subject";
         state.wizardStep = 2; // 단원 및 성취기준 확인 페이지로 직행
@@ -16583,33 +16584,46 @@
         state.subjectName = "바른·슬기로운·즐거운 생활(통합)";
         state.subjectUnitIndex = 0;
         const units = CURRICULUM_DB[state.subjectGrade][state.subjectName] || [];
-        state.selectedStandardCodes = units[0] ? units[0].standards.map(s => s.code) : [];
+        state.selectedStandardCodes = (units[0] && units[0].standards && units[0].standards[0]) ? [units[0].standards[0].code] : [];
         generateSubjectRecords();
         renderAll();
         showToast("1·2학년 바른·슬기로운·즐거운 생활 3교과 통합 기재 모드가 적용되었습니다.", "success");
       });
 
-      // 단원 드롭다운 변경
+      // 단원 드롭다운 변경 (기존 바구니에 담은 성취기준을 유지하여 단원 중복 선택 지원!)
       document.getElementById("unitSelect").addEventListener("change", (e) => {
         state.subjectUnitIndex = parseInt(e.target.value, 10) || 0;
-        const units = CURRICULUM_DB[state.subjectGrade][state.subjectName] || [];
-        const unit = units[state.subjectUnitIndex];
-        state.selectedStandardCodes = unit ? unit.standards.map(s => s.code) : [];
-        generateSubjectRecords();
+        saveStateToCache();
         renderAll();
       });
 
-      // 성취기준 전체선택
+      // 성취기준 현재 단원 전체 담기 (기존 바구니에 누적 추가)
       document.getElementById("btnSelectAllStandards").addEventListener("click", () => {
         const units = CURRICULUM_DB[state.subjectGrade][state.subjectName] || [];
         const unit = units[state.subjectUnitIndex];
         if (unit) {
-          state.selectedStandardCodes = unit.standards.map(s => s.code);
+          const existing = new Set(state.selectedStandardCodes || []);
+          (unit.standards || []).forEach(s => existing.add(s.code));
+          state.selectedStandardCodes = Array.from(existing);
           generateSubjectRecords();
           renderAll();
-          showToast("해당 단원의 모든 성취기준이 선택되었습니다.", "success");
+          showToast("현재 단원의 성취기준이 바구니에 추가되었습니다.", "success");
         }
       });
+
+      // 바구니 비우기 버튼 (현재 보고 있는 단원의 첫 번째 성취기준만 남기고 초기화)
+      const btnClearBasket = document.getElementById("btnClearStandardBasket");
+      if (btnClearBasket) {
+        btnClearBasket.addEventListener("click", () => {
+          const units = CURRICULUM_DB[state.subjectGrade][state.subjectName] || [];
+          const curUnit = units[state.subjectUnitIndex] || units[0];
+          state.selectedStandardCodes = (curUnit && curUnit.standards && curUnit.standards[0]) ? [curUnit.standards[0].code] : [];
+          state.customStandards = [];
+          generateSubjectRecords();
+          renderAll();
+          showToast("담은 성취기준 바구니를 정리했습니다.", "info");
+        });
+      }
 
       // 성취기준 및 행동특성 활동 실시간 검색 필터
       const stdSearchEl = document.getElementById("standardSearchInput");
